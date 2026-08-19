@@ -1,6 +1,6 @@
 {
-  "name": "Mein Quiz",
-  "short_name": "Quiz",
+  "name": "Die Geheime Tür",
+  "short_name": "Leon's Tür",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#f3f4f6",
