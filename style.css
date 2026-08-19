@@ -146,3 +146,39 @@ button {
   text-decoration: none;
   box-sizing: border-box;
 }
+.extra-link-card {
+  text-align: center;
+}
+
+.big-link-button {
+  display: inline-block;
+  width: 100%;
+  margin-top: 14px;
+  padding: 16px 20px;
+
+  background: #111827;
+  color: white;
+
+  text-decoration: none;
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.05rem;
+
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.big-link-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 7px 16px rgba(0, 0, 0, 0.22);
+}
+
+.big-link-button:active {
+  transform: translateY(0);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.16);
+}
