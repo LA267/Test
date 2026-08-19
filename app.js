@@ -419,135 +419,93 @@ async function submitScore() {
 // BESTENLISTE LADEN
 // ======================================================
 
-async function loadLeaderboard() {
+import { Redis } from "@upstash/redis";
 
-  const leaderboardEl =
-    document.getElementById(
-      "leaderboard"
-    );
+const redis = Redis.fromEnv();
 
-  leaderboardEl.innerHTML =
-    '<p class="status">Bestenliste wird geladen …</p>';
+export default async function handler(req, res) {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  res.setHeader("Cache-Control", "no-store");
+
+  if (req.method === "OPTIONS") {
+    return res.status(204).end();
+  }
+
+  if (req.method !== "GET") {
+    return res.status(405).json({
+      error: "Method not allowed"
+    });
+  }
 
   try {
+    let entries =
+      (await redis.get("quiz_leaderboard")) || [];
 
-    const response =
-      await fetch(
-        `${API_BASE}/api/leaderboard`,
-        {
-          cache: "no-store"
-        }
-      );
-
-    if (!response.ok) {
-      throw new Error(
-        `Leaderboard-API ${response.status}`
-      );
+    if (!Array.isArray(entries)) {
+      entries = [];
     }
 
-    const data =
-      await response.json();
+    // Falls aus der alten Version bereits doppelte
+    // Nicknames vorhanden sind, bereinigen wir sie hier.
+    const bestByNickname =
+      new Map();
 
-    const entries =
-      Array.isArray(data.leaderboard)
-        ? data.leaderboard
-        : [];
+    for (const entry of entries) {
+      const name =
+        String(entry.nickname || "").trim();
 
-    leaderboardEl.innerHTML = "";
+      const time =
+        Number(entry.time);
 
-    if (entries.length === 0) {
-
-      const empty =
-        document.createElement("p");
-
-      empty.className = "status";
-
-      empty.textContent =
-        "Noch keine Zeiten vorhanden.";
-
-      leaderboardEl.appendChild(empty);
-
-      return;
-    }
-
-
-    entries.forEach(
-      (entry, index) => {
-
-        const row =
-          document.createElement("div");
-
-        row.className =
-          "leaderboard-row";
-
-
-        const rank =
-          document.createElement("span");
-
-        rank.className =
-          "leaderboard-rank";
-
-        if (index === 0) {
-          rank.textContent = "🥇";
-        } else if (index === 1) {
-          rank.textContent = "🥈";
-        } else if (index === 2) {
-          rank.textContent = "🥉";
-        } else {
-          rank.textContent =
-            `${index + 1}.`;
-        }
-
-
-        const name =
-          document.createElement("span");
-
-        name.className =
-          "leaderboard-name";
-
-        // absichtlich textContent:
-        // Nicknames werden NICHT als HTML eingesetzt
-        name.textContent =
-          entry.nickname;
-
-
-        const time =
-          document.createElement("span");
-
-        time.className =
-          "leaderboard-time";
-
-        time.textContent =
-          formatTime(entry.time);
-
-
-        row.appendChild(rank);
-        row.appendChild(name);
-        row.appendChild(time);
-
-        leaderboardEl.appendChild(row);
+      if (
+        !name ||
+        !Number.isFinite(time)
+      ) {
+        continue;
       }
-    );
+
+      const key =
+        name.toLowerCase();
+
+      const previous =
+        bestByNickname.get(key);
+
+      if (
+        !previous ||
+        time < Number(previous.time)
+      ) {
+        bestByNickname.set(
+          key,
+          entry
+        );
+      }
+    }
+
+    const leaderboard =
+      Array.from(
+        bestByNickname.values()
+      ).sort(
+        (a, b) =>
+          Number(a.time) -
+          Number(b.time)
+      );
+
+    return res.status(200).json({
+      leaderboard
+    });
 
   } catch (error) {
-
     console.error(
-      "Bestenliste konnte nicht geladen werden:",
+      "Leaderboard error:",
       error
     );
 
-    leaderboardEl.innerHTML = "";
-
-    const errorText =
-      document.createElement("p");
-
-    errorText.className =
-      "status";
-
-    errorText.textContent =
-      "Bestenliste konnte nicht geladen werden.";
-
-    leaderboardEl.appendChild(errorText);
+    return res.status(500).json({
+      error:
+        "Could not load leaderboard"
+    });
   }
 }
 
