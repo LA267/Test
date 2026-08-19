@@ -139,3 +139,10 @@ button {
   min-height: 1.3em;
   color: #4b5563;
 }
+
+.link-button {
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  box-sizing: border-box;
+}
