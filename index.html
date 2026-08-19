@@ -4,68 +4,243 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#111827">
+
   <title>Kommst du rein?</title>
+
   <link rel="icon" type="image/png" href="door-notification.png">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
+
   <main class="container">
-    <section class="card" id="quiz-card">
+
+    <!-- =========================================
+         QUIZ-START
+    ========================================== -->
+
+    <section class="card" id="start-card">
+
+      <h1>Bereit?</h1>
+
+      <p>
+        Gib einen Nickname ein und starte das Quiz.
+        Die Zeit beginnt erst beim Klick auf „Quiz starten“.
+      </p>
+
+      <input
+        id="nickname"
+        type="text"
+        maxlength="20"
+        placeholder="Dein Nickname"
+        autocomplete="off"
+      >
+
+      <button
+        id="start-quiz"
+        class="primary"
+      >
+        Quiz starten
+      </button>
+
+      <p
+        id="start-message"
+        class="status"
+      ></p>
+
+    </section>
+
+
+    <!-- =========================================
+         QUIZ
+    ========================================== -->
+
+    <section
+      class="card hidden"
+      id="quiz-card"
+    >
+
       <div class="topline">
-        <span id="progress">Frage 1</span>
-        <span id="score">0 Punkte</span>
+
+        <span id="progress">
+          Frage 1
+        </span>
+
+        <span id="timer">
+          ⏱ 00:00.0
+        </span>
+
       </div>
 
-      <h1 id="question">Quiz wird geladen …</h1>
+      <h1 id="question">
+        Quiz wird geladen …
+      </h1>
+
       <div id="answers"></div>
 
-      <button id="next" class="primary" disabled>Weiter</button>
+      <button
+        id="next"
+        class="primary"
+        disabled
+      >
+        Weiter
+      </button>
+
     </section>
 
-    <section class="card hidden" id="result-card">
-      <h1>Quiz beendet</h1>
+
+    <!-- =========================================
+         ERGEBNIS
+    ========================================== -->
+
+    <section
+      class="card hidden"
+      id="result-card"
+    >
+
+      <h1>Geschafft!</h1>
+
       <p id="result-text"></p>
 
+      <p>
+        Deine Zeit:
+        <strong id="final-time">--:--.-</strong>
+      </p>
+
       <div class="solution">
-        <div class="solution-label">Das Lösungswort</div>
-        <div id="solution-word">wird geladen …</div>
+
+        <div class="solution-label">
+          Das Lösungswort
+        </div>
+
+        <div id="solution-word">
+          wird geladen …
+        </div>
+
       </div>
 
-      <button id="restart" class="primary">Nochmal spielen</button>
+      <button
+        id="restart"
+        class="primary"
+      >
+        Nochmal spielen
+      </button>
+
     </section>
+
+
+    <!-- =========================================
+         PUSH-BENACHRICHTIGUNGEN
+    ========================================== -->
 
     <section class="card push-card">
-      <h2>Stündliche Benachrichtigung</h2>
-      <p>Nur dein registriertes Android-Gerät erhält die Push-Nachricht mit dem neuen Lösungswort.</p>
-      <button id="enable-push" class="secondary">Benachrichtigungen auf diesem Handy aktivieren</button>
 
-      <div id="admin-area" class="hidden admin-area">
-        <input id="admin-token" type="password" placeholder="Registrierungscode">
-        <button id="register-device" class="secondary">Gerät registrieren</button>
+      <h2>
+        Stündliche Benachrichtigung
+      </h2>
+
+      <p>
+        Nur dein registriertes Android-Gerät erhält
+        die Push-Nachricht mit dem neuen Lösungswort.
+      </p>
+
+      <button
+        id="enable-push"
+        class="secondary"
+      >
+        Benachrichtigungen auf diesem Handy aktivieren
+      </button>
+
+      <div
+        id="admin-area"
+        class="hidden admin-area"
+      >
+
+        <input
+          id="admin-token"
+          type="password"
+          placeholder="Registrierungscode"
+        >
+
+        <button
+          id="register-device"
+          class="secondary"
+        >
+          Gerät registrieren
+        </button>
+
       </div>
 
-      <p id="push-status" class="status"></p>
+      <p
+        id="push-status"
+        class="status"
+      ></p>
 
-<section class="card extra-link-card">
-  <h2>Keine Ahnung von Knoten?</h2>
-
-  <p>
-    Dann mach jetzt das Allgemeinwissen-Quiz!
-  </p>
-
-  <a
-    href="https://la267.github.io/Test-2/"
-    class="big-link-button"
-  >
-    Zum Allgemeinwissen-Quiz
-  </a>
-</section>
-      
     </section>
+
+
+    <!-- =========================================
+         DEIN ALLGEMEINWISSEN-BUTTON
+    ========================================== -->
+
+    <section class="card extra-link-card">
+
+      <h2>
+        Keine Ahnung von Knoten?
+      </h2>
+
+      <p>
+        Dann mach jetzt das Allgemeinwissen-Quiz!
+      </p>
+
+      <a
+        href="https://la267.github.io/Test-2/"
+        class="big-link-button"
+      >
+        Zum Allgemeinwissen-Quiz
+      </a>
+
+    </section>
+
+
+    <!-- =========================================
+         BESTENLISTE
+    ========================================== -->
+
+    <section class="card leaderboard-card">
+
+      <h2>
+        🏆 Bestenliste
+      </h2>
+
+      <p>
+        Die schnellsten Zeiten:
+      </p>
+
+      <div id="leaderboard">
+
+        <p class="status">
+          Bestenliste wird geladen …
+        </p>
+
+      </div>
+
+      <button
+        id="refresh-leaderboard"
+        class="secondary leaderboard-refresh"
+      >
+        Bestenliste aktualisieren
+      </button>
+
+    </section>
+
+
   </main>
 
-  <script src="quiz.js"></script>
-  <script src="app.js"></script>
+
+  <script src="quiz.js?v=2"></script>
+  <script src="app.js?v=3"></script>
+
 </body>
 </html>
