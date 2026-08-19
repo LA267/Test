@@ -1,4 +1,4 @@
-const API_BASE = "https://DEIN-VERCEL-PROJEKT.vercel.app";
+const API_BASE = "https://mein-quiz.vercel.app";
 
 let current = 0;
 let score = 0;
