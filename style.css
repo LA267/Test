@@ -182,3 +182,114 @@ button {
   transform: translateY(0);
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.16);
 }
+
+.leaderboard-card {
+  overflow: hidden;
+}
+
+.leaderboard-card h2 {
+  margin-bottom: 6px;
+}
+
+.leaderboard-row {
+  display: grid;
+
+  grid-template-columns:
+    48px
+    minmax(0, 1fr)
+    90px;
+
+  align-items: center;
+
+  gap: 16px;
+
+  min-height: 52px;
+
+  padding:
+    10px
+    12px;
+
+  margin-bottom: 6px;
+
+  border-radius: 10px;
+
+  border:
+    1px solid #e5e7eb;
+
+  background: #ffffff;
+}
+
+.leaderboard-rank {
+  font-size: 1rem;
+  font-weight: 800;
+
+  text-align: right;
+
+  color: #6b7280;
+}
+
+.leaderboard-name {
+  font-weight: 600;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.leaderboard-time {
+  font-weight: 800;
+
+  text-align: right;
+
+  font-variant-numeric:
+    tabular-nums;
+
+  letter-spacing:
+    0.02em;
+}
+
+
+/* Platz 1 */
+
+.place-first {
+  border-width: 2px;
+  font-size: 1.04rem;
+}
+
+.place-first
+.leaderboard-rank {
+  font-size: 1.15rem;
+}
+
+
+/* Platz 2 */
+
+.place-second {
+  border-width: 2px;
+}
+
+
+/* Platz 3 */
+
+.place-third {
+  border-width: 2px;
+}
+
+
+/* Eigener Eintrag */
+
+.current-player {
+  outline:
+    2px solid #111827;
+
+  outline-offset:
+    -2px;
+}
+
+
+/* Aktualisieren-Button */
+
+.leaderboard-refresh {
+  width: 100%;
+  margin-top: 16px;
+}
