@@ -1,7 +1,7 @@
 const API_BASE = "https://mein-quiz.vercel.app";
 
 // ======================================================
-// QUIZ + TIMER
+// STATUS
 // ======================================================
 
 let current = 0;
@@ -14,12 +14,15 @@ let timerInterval = null;
 let finalTime = null;
 let quizRunning = false;
 
+// ======================================================
+// ELEMENTE
+// ======================================================
+
 const questionEl = document.getElementById("question");
 const answersEl = document.getElementById("answers");
 const nextBtn = document.getElementById("next");
 const progressEl = document.getElementById("progress");
 const timerEl = document.getElementById("timer");
-
 
 // ======================================================
 // ZEIT FORMATIEREN
@@ -41,7 +44,6 @@ function formatTime(milliseconds) {
   );
 }
 
-
 // ======================================================
 // TIMER
 // ======================================================
@@ -53,26 +55,25 @@ function startTimer() {
 
   clearInterval(timerInterval);
 
-  timerEl.textContent = "⏱ 00:00.0";
+  timerEl.textContent = "00:00.0";
 
   timerInterval = setInterval(() => {
     if (!quizRunning) return;
 
     const elapsed = performance.now() - startTime;
 
-    timerEl.textContent =
-      "⏱ " + formatTime(elapsed);
+    timerEl.textContent = formatTime(elapsed);
   }, 100);
 }
-
 
 function stopTimer() {
   if (!quizRunning || startTime === null) {
     return;
   }
 
-  finalTime =
-    Math.round(performance.now() - startTime);
+  finalTime = Math.round(
+    performance.now() - startTime
+  );
 
   quizRunning = false;
 
@@ -80,9 +81,8 @@ function stopTimer() {
   timerInterval = null;
 
   timerEl.textContent =
-    "⏱ " + formatTime(finalTime);
+    formatTime(finalTime);
 }
-
 
 // ======================================================
 // QUIZ STARTEN
@@ -108,7 +108,9 @@ document
     }
 
     if (
-      !/^[\p{L}\p{N} _.-]+$/u.test(enteredName)
+      !/^[\p{L}\p{N} _.-]+$/u.test(
+        enteredName
+      )
     ) {
       message.textContent =
         "Bitte verwende nur Buchstaben, Zahlen, Leerzeichen, Punkt, Bindestrich oder Unterstrich.";
@@ -140,7 +142,6 @@ document
     startTimer();
   });
 
-
 // ======================================================
 // FRAGE ANZEIGEN
 // ======================================================
@@ -158,7 +159,8 @@ function renderQuestion() {
 
   const q = quiz[current];
 
-  questionEl.textContent = q.question;
+  questionEl.textContent =
+    q.question;
 
   progressEl.textContent =
     `Frage ${current + 1} von ${quiz.length}`;
@@ -171,7 +173,9 @@ function renderQuestion() {
         text,
         index
       }))
-      .sort(() => Math.random() - 0.5);
+      .sort(
+        () => Math.random() - 0.5
+      );
 
   shuffled.forEach(item => {
     const button =
@@ -180,17 +184,19 @@ function renderQuestion() {
     button.className = "answer";
     button.textContent = item.text;
 
-    button.addEventListener("click", () => {
-      selectAnswer(
-        button,
-        item.index
-      );
-    });
+    button.addEventListener(
+      "click",
+      () => {
+        selectAnswer(
+          button,
+          item.index
+        );
+      }
+    );
 
     answersEl.appendChild(button);
   });
 }
-
 
 // ======================================================
 // ANTWORT AUSWÄHLEN
@@ -204,16 +210,20 @@ function selectAnswer(
 
   document
     .querySelectorAll(".answer")
-    .forEach(b =>
-      b.classList.remove("selected")
-    );
+    .forEach(button => {
+      button.classList.remove(
+        "selected"
+      );
+    });
 
-  button.classList.add("selected");
+  button.classList.add(
+    "selected"
+  );
 
   selected = originalIndex;
+
   nextBtn.disabled = false;
 }
-
 
 // ======================================================
 // MELDUNGEN
@@ -244,9 +254,9 @@ function showMessage(text) {
     );
   }
 
-  messageEl.textContent = text;
+  messageEl.textContent =
+    text;
 }
-
 
 function clearMessage() {
   const messageEl =
@@ -258,7 +268,6 @@ function clearMessage() {
     messageEl.textContent = "";
   }
 }
-
 
 // ======================================================
 // ANTWORT PRÜFEN
@@ -281,7 +290,6 @@ nextBtn.addEventListener(
     const correct =
       quiz[current].correct;
 
-
     // FALSCHE ANTWORT
     if (selected !== correct) {
 
@@ -299,11 +307,11 @@ nextBtn.addEventListener(
 
       selected = null;
       locked = false;
+
       nextBtn.disabled = true;
 
       return;
     }
-
 
     // RICHTIGE ANTWORT
     clearMessage();
@@ -314,7 +322,9 @@ nextBtn.addEventListener(
 
       current++;
 
-      if (current >= quiz.length) {
+      if (
+        current >= quiz.length
+      ) {
         finishQuiz();
       } else {
         clearMessage();
@@ -325,13 +335,11 @@ nextBtn.addEventListener(
   }
 );
 
-
 // ======================================================
 // QUIZ BEENDET
 // ======================================================
 
 async function finishQuiz() {
-
   stopTimer();
 
   document
@@ -352,23 +360,18 @@ async function finishQuiz() {
     .textContent =
       formatTime(finalTime);
 
-  // Lösungswort laden
   loadCurrentWord();
 
-  // Zeit speichern
   await submitScore();
 
-  // Bestenliste aktualisieren
   await loadLeaderboard();
 }
-
 
 // ======================================================
 // ZEIT SPEICHERN
 // ======================================================
 
 async function submitScore() {
-
   if (
     !nickname ||
     !Number.isFinite(finalTime)
@@ -377,7 +380,6 @@ async function submitScore() {
   }
 
   try {
-
     const response =
       await fetch(
         `${API_BASE}/api/submit-score`,
@@ -390,7 +392,7 @@ async function submitScore() {
           },
 
           body: JSON.stringify({
-            nickname: nickname,
+            nickname,
             time: finalTime
           })
         }
@@ -406,7 +408,6 @@ async function submitScore() {
     }
 
   } catch (error) {
-
     console.error(
       "Zeit konnte nicht gespeichert werden:",
       error
@@ -414,104 +415,177 @@ async function submitScore() {
   }
 }
 
-
 // ======================================================
 // BESTENLISTE LADEN
 // ======================================================
 
-import { Redis } from "@upstash/redis";
+async function loadLeaderboard() {
+  const leaderboardEl =
+    document.getElementById(
+      "leaderboard"
+    );
 
-const redis = Redis.fromEnv();
-
-export default async function handler(req, res) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-  res.setHeader("Cache-Control", "no-store");
-
-  if (req.method === "OPTIONS") {
-    return res.status(204).end();
-  }
-
-  if (req.method !== "GET") {
-    return res.status(405).json({
-      error: "Method not allowed"
-    });
-  }
+  leaderboardEl.innerHTML =
+    '<p class="status">Bestenliste wird geladen …</p>';
 
   try {
-    let entries =
-      (await redis.get("quiz_leaderboard")) || [];
-
-    if (!Array.isArray(entries)) {
-      entries = [];
-    }
-
-    // Falls aus der alten Version bereits doppelte
-    // Nicknames vorhanden sind, bereinigen wir sie hier.
-    const bestByNickname =
-      new Map();
-
-    for (const entry of entries) {
-      const name =
-        String(entry.nickname || "").trim();
-
-      const time =
-        Number(entry.time);
-
-      if (
-        !name ||
-        !Number.isFinite(time)
-      ) {
-        continue;
-      }
-
-      const key =
-        name.toLowerCase();
-
-      const previous =
-        bestByNickname.get(key);
-
-      if (
-        !previous ||
-        time < Number(previous.time)
-      ) {
-        bestByNickname.set(
-          key,
-          entry
-        );
-      }
-    }
-
-    const leaderboard =
-      Array.from(
-        bestByNickname.values()
-      ).sort(
-        (a, b) =>
-          Number(a.time) -
-          Number(b.time)
+    const response =
+      await fetch(
+        `${API_BASE}/api/leaderboard`,
+        {
+          cache: "no-store"
+        }
       );
 
-    return res.status(200).json({
-      leaderboard
-    });
+    if (!response.ok) {
+      throw new Error(
+        `Leaderboard-API ${response.status}`
+      );
+    }
+
+    const data =
+      await response.json();
+
+    const entries =
+      Array.isArray(
+        data.leaderboard
+      )
+        ? data.leaderboard
+        : [];
+
+    leaderboardEl.innerHTML = "";
+
+    if (entries.length === 0) {
+      const empty =
+        document.createElement("p");
+
+      empty.className =
+        "status";
+
+      empty.textContent =
+        "Noch keine Zeiten vorhanden.";
+
+      leaderboardEl.appendChild(
+        empty
+      );
+
+      return;
+    }
+
+    entries.forEach(
+      (entry, index) => {
+
+        const row =
+          document.createElement(
+            "div"
+          );
+
+        row.className =
+          "leaderboard-row";
+
+        if (index === 0) {
+          row.classList.add(
+            "place-first"
+          );
+        }
+
+        if (index === 1) {
+          row.classList.add(
+            "place-second"
+          );
+        }
+
+        if (index === 2) {
+          row.classList.add(
+            "place-third"
+          );
+        }
+
+        if (
+          nickname &&
+          String(
+            entry.nickname
+          ).toLowerCase() ===
+          nickname.toLowerCase()
+        ) {
+          row.classList.add(
+            "current-player"
+          );
+        }
+
+        // Platznummer
+        const rank =
+          document.createElement(
+            "span"
+          );
+
+        rank.className =
+          "leaderboard-rank";
+
+        rank.textContent =
+          `${index + 1}.`;
+
+        // Name
+        const name =
+          document.createElement(
+            "span"
+          );
+
+        name.className =
+          "leaderboard-name";
+
+        name.textContent =
+          entry.nickname;
+
+        // Zeit
+        const time =
+          document.createElement(
+            "span"
+          );
+
+        time.className =
+          "leaderboard-time";
+
+        time.textContent =
+          formatTime(
+            Number(entry.time)
+          );
+
+        row.appendChild(rank);
+        row.appendChild(name);
+        row.appendChild(time);
+
+        leaderboardEl.appendChild(
+          row
+        );
+      }
+    );
 
   } catch (error) {
     console.error(
-      "Leaderboard error:",
+      "Bestenliste konnte nicht geladen werden:",
       error
     );
 
-    return res.status(500).json({
-      error:
-        "Could not load leaderboard"
-    });
+    leaderboardEl.innerHTML = "";
+
+    const errorText =
+      document.createElement("p");
+
+    errorText.className =
+      "status";
+
+    errorText.textContent =
+      "Bestenliste konnte nicht geladen werden.";
+
+    leaderboardEl.appendChild(
+      errorText
+    );
   }
 }
 
-
 // ======================================================
-// BESTENLISTE MANUELL AKTUALISIEREN
+// BESTENLISTE AKTUALISIEREN
 // ======================================================
 
 document
@@ -523,13 +597,11 @@ document
     loadLeaderboard
   );
 
-
 // ======================================================
-// AKTUELLES LÖSUNGSWORT
+// LÖSUNGSWORT LADEN
 // ======================================================
 
 async function loadCurrentWord() {
-
   const wordEl =
     document.getElementById(
       "solution-word"
@@ -539,7 +611,6 @@ async function loadCurrentWord() {
     "wird geladen …";
 
   try {
-
     const response =
       await fetch(
         `${API_BASE}/api/current-word`,
@@ -561,7 +632,6 @@ async function loadCurrentWord() {
       data.word;
 
   } catch (error) {
-
     console.error(
       "Fehler beim Laden des Lösungswortes:",
       error
@@ -571,7 +641,6 @@ async function loadCurrentWord() {
       "Nicht verfügbar";
   }
 }
-
 
 // ======================================================
 // NOCHMAL SPIELEN
@@ -583,7 +652,9 @@ document
     "click",
     () => {
 
-      clearInterval(timerInterval);
+      clearInterval(
+        timerInterval
+      );
 
       current = 0;
       selected = null;
@@ -596,35 +667,50 @@ document
       clearMessage();
 
       document
-        .getElementById("result-card")
-        .classList.add("hidden");
+        .getElementById(
+          "result-card"
+        )
+        .classList.add(
+          "hidden"
+        );
 
       document
-        .getElementById("quiz-card")
-        .classList.add("hidden");
+        .getElementById(
+          "quiz-card"
+        )
+        .classList.add(
+          "hidden"
+        );
 
       document
-        .getElementById("start-card")
-        .classList.remove("hidden");
+        .getElementById(
+          "start-card"
+        )
+        .classList.remove(
+          "hidden"
+        );
 
       document
-        .getElementById("nickname")
-        .value = nickname;
+        .getElementById(
+          "nickname"
+        )
+        .value =
+          nickname;
 
       document
-        .getElementById("solution-word")
+        .getElementById(
+          "solution-word"
+        )
         .textContent =
           "wird geladen …";
     }
   );
-
 
 // ======================================================
 // SERVICE WORKER
 // ======================================================
 
 async function setupPush() {
-
   const status =
     document.getElementById(
       "push-status"
@@ -634,7 +720,6 @@ async function setupPush() {
     !("serviceWorker" in navigator) ||
     !("PushManager" in window)
   ) {
-
     status.textContent =
       "Push-Benachrichtigungen werden von diesem Browser nicht unterstützt.";
 
@@ -642,7 +727,6 @@ async function setupPush() {
   }
 
   try {
-
     await navigator
       .serviceWorker
       .register("./sw.js");
@@ -654,12 +738,13 @@ async function setupPush() {
       .getElementById(
         "admin-area"
       )
-      .classList.remove("hidden");
+      .classList.remove(
+        "hidden"
+      );
 
     return true;
 
   } catch (error) {
-
     console.error(
       "Service Worker Fehler:",
       error
@@ -671,7 +756,6 @@ async function setupPush() {
     return false;
   }
 }
-
 
 // ======================================================
 // BENACHRICHTIGUNGEN ERLAUBEN
@@ -693,7 +777,6 @@ document
       if (
         !("Notification" in window)
       ) {
-
         status.textContent =
           "Dieser Browser unterstützt keine Benachrichtigungen.";
 
@@ -701,7 +784,6 @@ document
       }
 
       try {
-
         const permission =
           await Notification
             .requestPermission();
@@ -709,7 +791,6 @@ document
         if (
           permission !== "granted"
         ) {
-
           status.textContent =
             "Benachrichtigungen wurden nicht erlaubt.";
 
@@ -720,13 +801,11 @@ document
           await setupPush();
 
         if (success) {
-
           status.textContent =
             "Benachrichtigungen erlaubt. Gib jetzt deinen Registrierungscode ein.";
         }
 
       } catch (error) {
-
         console.error(error);
 
         status.textContent =
@@ -734,7 +813,6 @@ document
       }
     }
   );
-
 
 // ======================================================
 // ANDROID-GERÄT REGISTRIEREN
@@ -762,7 +840,6 @@ document
           .trim();
 
       if (!token) {
-
         status.textContent =
           "Bitte den Registrierungscode eingeben.";
 
@@ -770,7 +847,6 @@ document
       }
 
       try {
-
         status.textContent =
           "Registrierung läuft …";
 
@@ -788,7 +864,6 @@ document
           );
 
         if (!keyResponse.ok) {
-
           throw new Error(
             `Public-Key-API: ${keyResponse.status} ${keyResponse.statusText}`
           );
@@ -797,8 +872,9 @@ document
         const keyData =
           await keyResponse.json();
 
-        if (!keyData.publicKey) {
-
+        if (
+          !keyData.publicKey
+        ) {
           throw new Error(
             "VAPID Public Key ist leer."
           );
@@ -810,7 +886,6 @@ document
             .getSubscription();
 
         if (!subscription) {
-
           subscription =
             await registration
               .pushManager
@@ -849,7 +924,6 @@ document
           await response.text();
 
         if (!response.ok) {
-
           throw new Error(
             `Subscribe-API: ${response.status} ${response.statusText} – ${responseText}`
           );
@@ -865,7 +939,6 @@ document
           .value = "";
 
       } catch (error) {
-
         console.error(
           "Push-Registrierung fehlgeschlagen:",
           error
@@ -877,7 +950,6 @@ document
     }
   );
 
-
 // ======================================================
 // VAPID KEY UMWANDELN
 // ======================================================
@@ -885,7 +957,6 @@ document
 function urlBase64ToUint8Array(
   base64String
 ) {
-
   const padding =
     "=".repeat(
       (4 - base64String.length % 4) % 4
@@ -906,7 +977,6 @@ function urlBase64ToUint8Array(
     )
   );
 }
-
 
 // ======================================================
 // START
