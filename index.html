@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111827">
+  <title>Mein Quiz</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="container">
+    <section class="card" id="quiz-card">
+      <div class="topline">
+        <span id="progress">Frage 1</span>
+        <span id="score">0 Punkte</span>
+      </div>
+
+      <h1 id="question">Quiz wird geladen …</h1>
+      <div id="answers"></div>
+
+      <button id="next" class="primary" disabled>Weiter</button>
+    </section>
+
+    <section class="card hidden" id="result-card">
+      <h1>Quiz beendet</h1>
+      <p id="result-text"></p>
+
+      <div class="solution">
+        <div class="solution-label">Das Lösungswort</div>
+        <div id="solution-word">wird geladen …</div>
+      </div>
+
+      <button id="restart" class="primary">Nochmal spielen</button>
+    </section>
+
+    <section class="card push-card">
+      <h2>Stündliche Benachrichtigung</h2>
+      <p>Nur dein registriertes Android-Gerät erhält die Push-Nachricht mit dem neuen Lösungswort.</p>
+      <button id="enable-push" class="secondary">Benachrichtigungen auf diesem Handy aktivieren</button>
+
+      <div id="admin-area" class="hidden admin-area">
+        <input id="admin-token" type="password" placeholder="Registrierungscode">
+        <button id="register-device" class="secondary">Gerät registrieren</button>
+      </div>
+
+      <p id="push-status" class="status"></p>
+    </section>
+  </main>
+
+  <script src="quiz.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
