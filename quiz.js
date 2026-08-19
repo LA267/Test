@@ -11,18 +11,23 @@
 
 const quiz = [
   {
-    question: "Was ist die Hauptstadt von Frankreich?",
-    answers: ["Berlin", "Madrid", "Paris", "Rom"],
-    correct: 2
-  },
-  {
-    question: "Wie viel ist 7 × 8?",
-    answers: ["54", "56", "64", "48"],
+    question: "Wie heißt der erste Knoten?",
+    answers: ["Freundschaftsknoten", "Palstek", "Weberknoten", "Breze"],
     correct: 1
   },
   {
-    question: "Welcher Planet ist der dritte Planet von der Sonne?",
-    answers: ["Mars", "Venus", "Jupiter", "Erde"],
+    question: "Wie heißt der zweite Knoten?",
+    answers: ["Freundschaftsknoten", "Palstek", "Weberknoten", "Breze"],
+    correct: 0
+  },
+  {
+    question: "Wie heißt der dritte Knoten?",
+    answers: ["Freundschaftsknoten", "Palstek", "Weberknoten", "Breze"],
     correct: 3
+  },
+  {
+    question: "Wie heißt der vierte Knoten?",
+    answers: ["Freundschaftsknoten", "Palstek", "Weberknoten", "Breze"],
+    correct: 2
   }
 ];
