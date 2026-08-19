@@ -20,25 +20,19 @@ function renderQuestion() {
   locked = false;
 
   nextBtn.disabled = true;
-
   nextBtn.textContent =
     current === quiz.length - 1
-      ? "Quiz beenden"
-      : "Weiter";
+      ? "Quiz abschließen"
+      : "Antwort prüfen";
 
   const q = quiz[current];
 
   questionEl.textContent = q.question;
-
-  progressEl.textContent =
-    `Frage ${current + 1} von ${quiz.length}`;
-
-  scoreEl.textContent =
-    `${score} Punkte`;
+  progressEl.textContent = `Frage ${current + 1} von ${quiz.length}`;
+  scoreEl.textContent = `${score} richtig`;
 
   answersEl.innerHTML = "";
 
-  // Antworten für die Anzeige mischen
   const shuffled = q.answers
     .map((text, index) => ({
       text,
@@ -51,8 +45,6 @@ function renderQuestion() {
 
     button.className = "answer";
     button.textContent = item.text;
-
-    // Ursprüngliche Position merken
     button.dataset.originalIndex = item.index;
 
     button.addEventListener("click", () => {
@@ -63,23 +55,41 @@ function renderQuestion() {
   });
 }
 
-
 function selectAnswer(button, originalIndex) {
   if (locked) return;
 
   document
     .querySelectorAll(".answer")
-    .forEach(b => {
-      b.classList.remove("selected");
-    });
+    .forEach(b => b.classList.remove("selected"));
 
   button.classList.add("selected");
 
   selected = originalIndex;
-
   nextBtn.disabled = false;
 }
 
+function showMessage(text) {
+  let messageEl = document.getElementById("quiz-message");
+
+  if (!messageEl) {
+    messageEl = document.createElement("p");
+    messageEl.id = "quiz-message";
+    messageEl.style.marginTop = "14px";
+    messageEl.style.fontWeight = "600";
+
+    nextBtn.insertAdjacentElement("afterend", messageEl);
+  }
+
+  messageEl.textContent = text;
+}
+
+function clearMessage() {
+  const messageEl = document.getElementById("quiz-message");
+
+  if (messageEl) {
+    messageEl.textContent = "";
+  }
+}
 
 function finishQuiz() {
   document
@@ -93,9 +103,8 @@ function finishQuiz() {
   document
     .getElementById("result-text")
     .textContent =
-      `Du hast ${score} von ${quiz.length} Fragen richtig beantwortet.`;
+      `Geschafft! Du hast alle ${quiz.length} Fragen richtig beantwortet.`;
 
-  // Lösungswort unabhängig vom Quiz laden
   loadCurrentWord();
 }
 
@@ -112,7 +121,6 @@ async function loadCurrentWord() {
     "wird geladen …";
 
   try {
-
     const response = await fetch(
       `${API_BASE}/api/current-word`,
       {
@@ -133,7 +141,6 @@ async function loadCurrentWord() {
       data.word;
 
   } catch (error) {
-
     console.error(
       "Fehler beim Laden des Lösungswortes:",
       error
@@ -146,13 +153,12 @@ async function loadCurrentWord() {
 
 
 // ======================================================
-// WEITER-BUTTON
+// ANTWORT PRÜFEN
 // ======================================================
 
 nextBtn.addEventListener(
   "click",
   () => {
-
     if (
       selected === null ||
       locked
@@ -165,59 +171,49 @@ nextBtn.addEventListener(
     const correct =
       quiz[current].correct;
 
-    document
-      .querySelectorAll(".answer")
-      .forEach(button => {
+    // FALSCHE ANTWORT
+    if (selected !== correct) {
+      showMessage(
+        "Leider falsch. Versuch es noch einmal."
+      );
 
-        const index =
-          Number(
-            button.dataset.originalIndex
-          );
+      document
+        .querySelectorAll(".answer")
+        .forEach(button => {
+          button.classList.remove("selected");
+        });
 
-        // richtige Antwort markieren
-        if (index === correct) {
-          button.classList.add(
-            "correct"
-          );
-        }
+      selected = null;
+      locked = false;
+      nextBtn.disabled = true;
 
-        // falsche Auswahl markieren
-        if (
-          index === selected &&
-          selected !== correct
-        ) {
-          button.classList.add(
-            "wrong"
-          );
-        }
-
-      });
-
-    if (selected === correct) {
-      score++;
+      return;
     }
+
+    // RICHTIGE ANTWORT
+    clearMessage();
+
+    score++;
+
+    showMessage(
+      "Richtig!"
+    );
 
     setTimeout(
       () => {
-
         current++;
 
         if (
           current >= quiz.length
         ) {
-
           finishQuiz();
-
         } else {
-
+          clearMessage();
           renderQuestion();
-
         }
-
       },
-      700
+      600
     );
-
   }
 );
 
@@ -231,9 +227,10 @@ document
   .addEventListener(
     "click",
     () => {
-
       current = 0;
       score = 0;
+
+      clearMessage();
 
       document
         .getElementById("result-card")
@@ -244,7 +241,6 @@ document
         .classList.remove("hidden");
 
       renderQuestion();
-
     }
   );
 
@@ -254,7 +250,6 @@ document
 // ======================================================
 
 async function setupPush() {
-
   const status =
     document.getElementById(
       "push-status"
@@ -264,7 +259,6 @@ async function setupPush() {
     !("serviceWorker" in navigator) ||
     !("PushManager" in window)
   ) {
-
     status.textContent =
       "Push-Benachrichtigungen werden von diesem Browser nicht unterstützt.";
 
@@ -272,7 +266,6 @@ async function setupPush() {
   }
 
   try {
-
     await navigator
       .serviceWorker
       .register("./sw.js");
@@ -287,7 +280,6 @@ async function setupPush() {
     return true;
 
   } catch (error) {
-
     console.error(
       "Service Worker Fehler:",
       error
@@ -310,7 +302,6 @@ document
   .addEventListener(
     "click",
     async () => {
-
       const status =
         document.getElementById(
           "push-status"
@@ -319,7 +310,6 @@ document
       if (
         !("Notification" in window)
       ) {
-
         status.textContent =
           "Dieser Browser unterstützt keine Benachrichtigungen.";
 
@@ -327,7 +317,6 @@ document
       }
 
       try {
-
         const permission =
           await Notification
             .requestPermission();
@@ -335,7 +324,6 @@ document
         if (
           permission !== "granted"
         ) {
-
           status.textContent =
             "Benachrichtigungen wurden nicht erlaubt.";
 
@@ -346,20 +334,16 @@ document
           await setupPush();
 
         if (success) {
-
           status.textContent =
             "Benachrichtigungen erlaubt. Gib jetzt deinen Registrierungscode ein.";
-
         }
 
       } catch (error) {
-
         console.error(error);
 
         status.textContent =
           `Fehler: ${error.message}`;
       }
-
     }
   );
 
@@ -373,7 +357,6 @@ document
   .addEventListener(
     "click",
     async () => {
-
       const status =
         document.getElementById(
           "push-status"
@@ -388,7 +371,6 @@ document
           .trim();
 
       if (!token) {
-
         status.textContent =
           "Bitte den Registrierungscode eingeben.";
 
@@ -396,24 +378,13 @@ document
       }
 
       try {
-
         status.textContent =
           "Registrierung läuft …";
-
-
-        // ----------------------------------------------
-        // Service Worker holen
-        // ----------------------------------------------
 
         const registration =
           await navigator
             .serviceWorker
             .ready;
-
-
-        // ----------------------------------------------
-        // VAPID Public Key vom Backend holen
-        // ----------------------------------------------
 
         const keyResponse =
           await fetch(
@@ -424,107 +395,67 @@ document
           );
 
         if (!keyResponse.ok) {
-
           throw new Error(
             `Public-Key-API: ${keyResponse.status} ${keyResponse.statusText}`
           );
-
         }
-
 
         const keyData =
           await keyResponse.json();
 
-
         if (!keyData.publicKey) {
-
           throw new Error(
             "VAPID Public Key ist leer."
           );
-
         }
-
-
-        // ----------------------------------------------
-        // Vorhandenes Push-Abo prüfen
-        // ----------------------------------------------
 
         let subscription =
           await registration
             .pushManager
             .getSubscription();
 
-
-        // ----------------------------------------------
-        // Falls noch keines existiert:
-        // neues Push-Abo erzeugen
-        // ----------------------------------------------
-
         if (!subscription) {
-
           subscription =
             await registration
               .pushManager
               .subscribe({
-
                 userVisibleOnly: true,
-
                 applicationServerKey:
                   urlBase64ToUint8Array(
                     keyData.publicKey
                   )
-
               });
-
         }
-
-
-        // ----------------------------------------------
-        // Push-Abo an Vercel schicken
-        // ----------------------------------------------
 
         const response =
           await fetch(
             `${API_BASE}/api/subscribe`,
             {
-
               method: "POST",
 
               headers: {
-
                 "Content-Type":
                   "application/json",
 
                 "X-Admin-Token":
                   token
-
               },
 
               body:
                 JSON.stringify(
                   subscription
                 )
-
             }
           );
-
 
         const responseText =
           await response.text();
 
-
         if (!response.ok) {
-
           throw new Error(
             `Subscribe-API: ${response.status} ${response.statusText} – ${responseText}`
           );
-
         }
-
-
-        // ----------------------------------------------
-        // Erfolg
-        // ----------------------------------------------
 
         status.textContent =
           "Dieses Handy ist jetzt für die stündlichen Benachrichtigungen registriert.";
@@ -535,9 +466,7 @@ document
           )
           .value = "";
 
-
       } catch (error) {
-
         console.error(
           "Push-Registrierung fehlgeschlagen:",
           error
@@ -545,9 +474,7 @@ document
 
         status.textContent =
           `Registrierung fehlgeschlagen: ${error.name || "Fehler"} – ${error.message}`;
-
       }
-
     }
   );
 
@@ -559,7 +486,6 @@ document
 function urlBase64ToUint8Array(
   base64String
 ) {
-
   const padding =
     "=".repeat(
       (4 - base64String.length % 4) % 4
@@ -587,5 +513,4 @@ function urlBase64ToUint8Array(
 // ======================================================
 
 setupPush();
-
 renderQuestion();
