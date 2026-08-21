@@ -22,7 +22,7 @@ self.addEventListener("push", event => {
     image: "./door-notification.png",
 
     // Kleines Symbol für Android
-    badge: "./badge-96.png",
+    badge: "./icon-96.png",
 
     // Alte Benachrichtigung ersetzen statt stapeln
     tag: "hourly-solution-word",
