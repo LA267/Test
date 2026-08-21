@@ -1,51 +1,61 @@
 self.addEventListener("push", event => {
   let data = {
-    title: "🚪 Die Tür öffnet sich …",
-    body: "Ein neues Lösungswort wartet auf dich."
+    title: "Neues Lösungswort",
+    body: "Ein neues Lösungswort ist verfügbar.",
+    url: "./"
   };
 
   try {
     if (event.data) {
-      data = event.data.json();
+      data = {
+        ...data,
+        ...event.data.json()
+      };
     }
   } catch (error) {
-    console.error("Push-Daten konnten nicht gelesen werden:", error);
+    console.error(
+      "Push-Daten konnten nicht gelesen werden:",
+      error
+    );
   }
 
   const options = {
     body: data.body,
 
-    // Normales Benachrichtigungs-/App-Icon
     icon: "./icon-192.png",
 
-    // Großes Bild in der Benachrichtigung
+    // optional: großes Bild
     image: "./door-notification.png",
 
-    // Kleines Symbol für Android
+    // für Android-Statusleiste
     badge: "./icon-96.png",
 
-    // Alte Benachrichtigung ersetzen statt stapeln
-    tag: "hourly-solution-word",
-    renotify: true,
+    // ganz wichtig:
+    // immer dieselbe Benachrichtigung ersetzen
+    tag: "solution-word",
 
-    // Benachrichtigung nicht automatisch schließen
+    renotify: false,
+
+    // nicht dauerhaft erzwingen
     requireInteraction: false,
+
+    silent: false,
+
+    data: {
+      url: data.url || "./"
+    },
 
     actions: [
       {
-        action: "open-quiz",
-        title: "🚪 Quiz öffnen"
+        action: "open",
+        title: "Quiz öffnen"
       }
-    ],
-
-    data: {
-      url: "./"
-    }
+    ]
   };
 
   event.waitUntil(
     self.registration.showNotification(
-      data.title || "🚪 Neues Lösungswort",
+      data.title,
       options
     )
   );
@@ -53,36 +63,43 @@ self.addEventListener("push", event => {
 
 
 // ======================================================
-// KLICK AUF DIE BENACHRICHTIGUNG
+// KLICK AUF BENACHRICHTIGUNG
 // ======================================================
 
-self.addEventListener("notificationclick", event => {
-  event.notification.close();
+self.addEventListener(
+  "notificationclick",
+  event => {
 
-  const url =
-    event.notification.data?.url || "./";
+    event.notification.close();
 
-  event.waitUntil(
-    clients
-      .matchAll({
-        type: "window",
-        includeUncontrolled: true
-      })
-      .then(clientList => {
+    const targetUrl =
+      event.notification.data?.url || "./";
 
-        // Falls die Quiz-Seite bereits geöffnet ist:
-        // vorhandenes Fenster in den Vordergrund holen
-        for (const client of clientList) {
-          if ("focus" in client) {
-            return client.focus();
+    event.waitUntil(
+      clients
+        .matchAll({
+          type: "window",
+          includeUncontrolled: true
+        })
+        .then(clientList => {
+
+          for (const client of clientList) {
+
+            if (
+              "focus" in client
+            ) {
+              return client.focus();
+            }
           }
-        }
 
-        // Sonst neues Fenster öffnen
-        if (clients.openWindow) {
-          return clients.openWindow(url);
-        }
-
-      })
-  );
-});
+          if (
+            clients.openWindow
+          ) {
+            return clients.openWindow(
+              targetUrl
+            );
+          }
+        })
+    );
+  }
+);
