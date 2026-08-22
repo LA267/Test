@@ -27,7 +27,7 @@ self.addEventListener("push", event => {
     icon: "./icon-192.png",
 
     // optional: großes Bild
-    image: "./door-notification.png",
+  //  image: "./door-notification.png",
 
     // für Android-Statusleiste
     badge: "./badge.png?v=2",
