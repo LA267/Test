@@ -1,6 +1,4 @@
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
@@ -25,8 +23,6 @@ body {
 .topline {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  gap: 16px;
   color: #6b7280;
   font-size: .95rem;
   margin-bottom: 22px;
@@ -144,6 +140,159 @@ button {
   color: #4b5563;
 }
 
+.link-button {
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+.extra-link-card {
+  text-align: center;
+}
+
+.big-link-button {
+  display: inline-block;
+  width: 100%;
+  margin-top: 14px;
+  padding: 16px 20px;
+
+  background: #111827;
+  color: white;
+
+  text-decoration: none;
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.05rem;
+
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.big-link-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 7px 16px rgba(0, 0, 0, 0.22);
+}
+
+.big-link-button:active {
+  transform: translateY(0);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.16);
+}
+
+.leaderboard-card {
+  overflow: hidden;
+}
+
+.leaderboard-card h2 {
+  margin-bottom: 6px;
+}
+
+.leaderboard-row {
+  display: grid;
+
+  grid-template-columns:
+    48px
+    minmax(0, 1fr)
+    90px;
+
+  align-items: center;
+
+  gap: 16px;
+
+  min-height: 52px;
+
+  padding:
+    10px
+    12px;
+
+  margin-bottom: 6px;
+
+  border-radius: 10px;
+
+  border:
+    1px solid #e5e7eb;
+
+  background: #ffffff;
+}
+
+.leaderboard-rank {
+  font-size: 1rem;
+  font-weight: 800;
+
+  text-align: right;
+
+  color: #6b7280;
+}
+
+.leaderboard-name {
+  font-weight: 600;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.leaderboard-time {
+  font-weight: 800;
+
+  text-align: right;
+
+  font-variant-numeric:
+    tabular-nums;
+
+  letter-spacing:
+    0.02em;
+}
+
+
+/* Platz 1 */
+
+.place-first {
+  border-width: 2px;
+  font-size: 1.04rem;
+}
+
+.place-first
+.leaderboard-rank {
+  font-size: 1.15rem;
+}
+
+
+/* Platz 2 */
+
+.place-second {
+  border-width: 2px;
+}
+
+
+/* Platz 3 */
+
+.place-third {
+  border-width: 2px;
+}
+
+
+/* Eigener Eintrag */
+
+.current-player {
+  outline:
+    2px solid #111827;
+
+  outline-offset:
+    -2px;
+}
+
+
+/* Aktualisieren-Button */
+
+.leaderboard-refresh {
+  width: 100%;
+  margin-top: 16px;
+}
 
 /* =========================================
    NICKNAME
@@ -164,131 +313,4 @@ button {
   outline: none;
   border-color: #9ca3af;
   box-shadow: 0 0 0 3px rgba(17, 24, 39, .08);
-}
-
-
-/* =========================================
-   TIMER
-========================================= */
-
-#timer {
-  font-weight: 800;
-  color: #111827;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: .03em;
-}
-
-
-/* =========================================
-   BESTENLISTE
-========================================= */
-
-.leaderboard-card {
-  overflow: hidden;
-}
-
-.leaderboard-card h2 {
-  margin-bottom: 6px;
-}
-
-.leaderboard-row {
-  display: grid;
-  grid-template-columns: 48px minmax(0, 1fr) 90px;
-  align-items: center;
-  gap: 16px;
-
-  min-height: 52px;
-
-  padding: 11px 12px;
-  margin-bottom: 7px;
-
-  border: 1px solid #e5e7eb;
-  border-radius: 11px;
-
-  background: #ffffff;
-}
-
-.leaderboard-rank {
-  font-weight: 800;
-  text-align: right;
-  color: #6b7280;
-}
-
-.leaderboard-name {
-  font-weight: 600;
-
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.leaderboard-time {
-  font-weight: 800;
-  text-align: right;
-
-  font-variant-numeric: tabular-nums;
-  letter-spacing: .02em;
-}
-
-
-/* Top 3 etwas hervorheben */
-
-.place-first {
-  border-width: 2px;
-  background: #fafafa;
-}
-
-.place-first .leaderboard-rank {
-  font-size: 1.1rem;
-  color: #111827;
-}
-
-.place-second {
-  border-width: 2px;
-}
-
-.place-third {
-  border-width: 2px;
-}
-
-
-/* Eigener Eintrag */
-
-.current-player {
-  outline: 2px solid #111827;
-  outline-offset: -2px;
-}
-
-
-/* Bestenliste aktualisieren */
-
-.leaderboard-refresh {
-  width: 100%;
-  margin-top: 16px;
-}
-
-
-/* =========================================
-   MOBILE
-========================================= */
-
-@media (max-width: 520px) {
-
-  .card {
-    padding: 20px;
-  }
-
-  .leaderboard-row {
-    grid-template-columns: 38px minmax(0, 1fr) 78px;
-    gap: 10px;
-    padding: 10px;
-  }
-
-  .leaderboard-time {
-    font-size: .95rem;
-  }
-
-  .topline {
-    gap: 10px;
-  }
 }
