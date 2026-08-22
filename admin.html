@@ -16,8 +16,6 @@
 
   <title>Quiz Administration</title>
 
-  <link rel="icon" type="image/png" href="door-notification.png">
-
   <style>
     * {
       box-sizing: border-box;
@@ -25,6 +23,7 @@
 
     body {
       margin: 0;
+
       font-family:
         system-ui,
         -apple-system,
@@ -37,11 +36,10 @@
     }
 
     .container {
-      width:
-        min(
-          720px,
-          calc(100% - 28px)
-        );
+      width: min(
+        720px,
+        calc(100% - 28px)
+      );
 
       margin: 32px auto;
     }
@@ -61,6 +59,11 @@
     }
 
     h1 {
+      line-height: 1.25;
+      margin: 0 0 22px;
+    }
+
+    h2 {
       margin-top: 0;
     }
 
@@ -68,26 +71,40 @@
     select {
       width: 100%;
 
-      padding: 14px;
+      padding: 14px 16px;
 
-      margin-bottom: 12px;
+      margin:
+        8px 0
+        12px;
 
       border:
         1px solid #d1d5db;
 
       border-radius: 10px;
 
-      font-size: 1rem;
-
       background: white;
+      color: #111827;
+
+      font-size: 1rem;
+    }
+
+    input:focus,
+    select:focus {
+      outline: none;
+
+      border-color: #9ca3af;
+
+      box-shadow:
+        0 0 0 3px
+        rgba(17, 24, 39, .08);
     }
 
     button {
       border: 0;
 
-      border-radius: 10px;
+      border-radius: 11px;
 
-      padding: 12px 16px;
+      padding: 13px 17px;
 
       font-size: 1rem;
 
@@ -99,6 +116,17 @@
 
       background: #111827;
       color: white;
+
+      margin-top: 8px;
+    }
+
+    .secondary {
+      width: 100%;
+
+      background: #e5e7eb;
+      color: #111827;
+
+      margin-top: 10px;
     }
 
     .delete-button {
@@ -106,9 +134,27 @@
       color: #991b1b;
 
       font-size: .9rem;
+
+      white-space: nowrap;
     }
 
-    .row {
+    .status {
+      min-height: 1.4em;
+
+      margin-bottom: 0;
+
+      color: #4b5563;
+    }
+
+    .success {
+      color: #166534;
+    }
+
+    .error {
+      color: #b91c1c;
+    }
+
+    .leaderboard-row {
       display: grid;
 
       grid-template-columns:
@@ -121,19 +167,25 @@
 
       align-items: center;
 
-      padding: 12px 4px;
+      min-height: 54px;
+
+      padding:
+        10px
+        4px;
 
       border-bottom:
         1px solid #e5e7eb;
     }
 
-    .rank {
+    .leaderboard-rank {
       color: #6b7280;
-      font-weight: 700;
+
+      font-weight: 800;
+
       text-align: right;
     }
 
-    .name {
+    .leaderboard-name {
       font-weight: 600;
 
       overflow: hidden;
@@ -143,8 +195,8 @@
       white-space: nowrap;
     }
 
-    .time {
-      font-weight: 700;
+    .leaderboard-time {
+      font-weight: 800;
 
       text-align: right;
 
@@ -152,17 +204,34 @@
         tabular-nums;
     }
 
-    #status {
-      min-height: 1.4em;
+    .info-box {
+      margin-top: 16px;
+
+      padding: 14px;
+
+      border-radius: 10px;
+
+      background: #f9fafb;
+
       color: #4b5563;
+
+      font-size: .95rem;
+    }
+
+    [hidden] {
+      display: none !important;
     }
 
     @media (max-width: 560px) {
-      .row {
+      .card {
+        padding: 20px;
+      }
+
+      .leaderboard-row {
         grid-template-columns:
           34px
           minmax(0, 1fr)
-          76px;
+          78px;
       }
 
       .delete-button {
@@ -174,29 +243,54 @@
   </style>
 </head>
 
+
 <body>
 
   <main class="container">
 
+    <!-- =========================================
+         ADMIN
+    ========================================== -->
+
     <section class="card">
 
       <h1>
-        Bestenliste verwalten
+        Quiz Administration
       </h1>
 
       <p>
-        Admin-Code eingeben und
-        das gewünschte Quiz auswählen.
+        Gib deinen Admin-Code ein.
+        Er wird für die Bestenliste und
+        die Push-Registrierung verwendet.
       </p>
 
       <input
         id="admin-token"
         type="password"
-        placeholder="ADMIN_TOKEN"
+        placeholder="Admin-Code"
         autocomplete="off"
       >
 
+    </section>
+
+
+    <!-- =========================================
+         BESTENLISTE
+    ========================================== -->
+
+    <section class="card">
+
+      <h2>
+        Bestenliste verwalten
+      </h2>
+
+      <p>
+        Wähle die Bestenliste aus,
+        die du verwalten möchtest.
+      </p>
+
       <select id="quiz-select">
+
         <option value="1">
           Quiz 1 – Knoten
         </option>
@@ -204,19 +298,27 @@
         <option value="2">
           Quiz 2 – Allgemeinwissen
         </option>
+
       </select>
 
       <button
-        id="load"
+        id="load-leaderboard"
         class="primary"
       >
         Bestenliste laden
       </button>
 
-      <p id="status"></p>
+      <p
+        id="leaderboard-status"
+        class="status"
+      ></p>
 
     </section>
 
+
+    <!-- =========================================
+         BESTENLISTEN-EINTRÄGE
+    ========================================== -->
 
     <section
       class="card"
@@ -232,12 +334,66 @@
 
     </section>
 
+
+    <!-- =========================================
+         PUSH
+    ========================================== -->
+
+    <section class="card">
+
+      <h2>
+        Push-Benachrichtigungen
+      </h2>
+
+      <p>
+        Hier kannst du dieses Gerät für die
+        stündlichen Lösungswort-Benachrichtigungen
+        registrieren.
+      </p>
+
+      <button
+        id="enable-push"
+        class="secondary"
+      >
+        Benachrichtigungen erlauben
+      </button>
+
+      <button
+        id="register-device"
+        class="primary"
+      >
+        Dieses Gerät registrieren
+      </button>
+
+      <p
+        id="push-status"
+        class="status"
+      ></p>
+
+      <div class="info-box">
+        Bei einer erneuten Registrierung wird
+        das bisherige Push-Abo dieses Browsers
+        entfernt und anschließend neu erstellt.
+      </div>
+
+    </section>
+
   </main>
 
 
   <script>
+
+    // =========================================
+    // BACKEND
+    // =========================================
+
     const API_BASE =
       "https://mein-quiz.vercel.app";
+
+
+    // =========================================
+    // ELEMENTE
+    // =========================================
 
     const tokenEl =
       document.getElementById(
@@ -249,9 +405,9 @@
         "quiz-select"
       );
 
-    const statusEl =
+    const leaderboardStatusEl =
       document.getElementById(
-        "status"
+        "leaderboard-status"
       );
 
     const leaderboardEl =
@@ -259,11 +415,60 @@
         "leaderboard"
       );
 
-    const cardEl =
+    const leaderboardCardEl =
       document.getElementById(
         "leaderboard-card"
       );
 
+    const pushStatusEl =
+      document.getElementById(
+        "push-status"
+      );
+
+
+    // =========================================
+    // STATUS
+    // =========================================
+
+    function setLeaderboardStatus(
+      text,
+      type = ""
+    ) {
+      leaderboardStatusEl.textContent =
+        text;
+
+      leaderboardStatusEl.className =
+        "status";
+
+      if (type) {
+        leaderboardStatusEl
+          .classList
+          .add(type);
+      }
+    }
+
+
+    function setPushStatus(
+      text,
+      type = ""
+    ) {
+      pushStatusEl.textContent =
+        text;
+
+      pushStatusEl.className =
+        "status";
+
+      if (type) {
+        pushStatusEl
+          .classList
+          .add(type);
+      }
+    }
+
+
+    // =========================================
+    // ZEIT FORMATIEREN
+    // =========================================
 
     function formatTime(
       milliseconds
@@ -298,6 +503,10 @@
     }
 
 
+    // =========================================
+    // BESTENLISTE LADEN
+    // =========================================
+
     async function loadLeaderboard() {
       const token =
         tokenEl.value.trim();
@@ -306,14 +515,17 @@
         quizEl.value;
 
       if (!token) {
-        statusEl.textContent =
-          "Bitte Admin-Code eingeben.";
+        setLeaderboardStatus(
+          "Bitte zuerst den Admin-Code eingeben.",
+          "error"
+        );
 
         return;
       }
 
-      statusEl.textContent =
-        "Bestenliste wird geladen …";
+      setLeaderboardStatus(
+        "Bestenliste wird geladen …"
+      );
 
       try {
         const response =
@@ -347,22 +559,38 @@
           await response.json();
 
         renderLeaderboard(
-          data.leaderboard || []
+          Array.isArray(
+            data.leaderboard
+          )
+            ? data.leaderboard
+            : []
         );
 
-        statusEl.textContent =
-          "";
+        setLeaderboardStatus(
+          "Bestenliste wurde geladen.",
+          "success"
+        );
 
       } catch (error) {
-        console.error(error);
+        console.error(
+          "Bestenlisten-Fehler:",
+          error
+        );
 
-        cardEl.hidden = true;
+        leaderboardCardEl.hidden =
+          true;
 
-        statusEl.textContent =
-          error.message;
+        setLeaderboardStatus(
+          error.message,
+          "error"
+        );
       }
     }
 
+
+    // =========================================
+    // BESTENLISTE ANZEIGEN
+    // =========================================
 
     function renderLeaderboard(
       entries
@@ -370,13 +598,26 @@
       leaderboardEl.innerHTML =
         "";
 
-      cardEl.hidden = false;
+      leaderboardCardEl.hidden =
+        false;
 
       if (
         entries.length === 0
       ) {
-        leaderboardEl.textContent =
+        const empty =
+          document.createElement(
+            "p"
+          );
+
+        empty.className =
+          "status";
+
+        empty.textContent =
           "Keine Einträge vorhanden.";
+
+        leaderboardEl.appendChild(
+          empty
+        );
 
         return;
       }
@@ -390,8 +631,10 @@
             );
 
           row.className =
-            "row";
+            "leaderboard-row";
 
+
+          // Platz
 
           const rank =
             document.createElement(
@@ -399,11 +642,13 @@
             );
 
           rank.className =
-            "rank";
+            "leaderboard-rank";
 
           rank.textContent =
             `${index + 1}.`;
 
+
+          // Name
 
           const name =
             document.createElement(
@@ -411,11 +656,13 @@
             );
 
           name.className =
-            "name";
+            "leaderboard-name";
 
           name.textContent =
             entry.nickname;
 
+
+          // Zeit
 
           const time =
             document.createElement(
@@ -423,13 +670,15 @@
             );
 
           time.className =
-            "time";
+            "leaderboard-time";
 
           time.textContent =
             formatTime(
               Number(entry.time)
             );
 
+
+          // Löschen
 
           const deleteButton =
             document.createElement(
@@ -453,8 +702,11 @@
 
 
           row.appendChild(rank);
+
           row.appendChild(name);
+
           row.appendChild(time);
+
           row.appendChild(
             deleteButton
           );
@@ -467,6 +719,10 @@
     }
 
 
+    // =========================================
+    // SPIELER LÖSCHEN
+    // =========================================
+
     async function deletePlayer(
       nickname
     ) {
@@ -475,6 +731,15 @@
 
       const quiz =
         quizEl.value;
+
+      if (!token) {
+        setLeaderboardStatus(
+          "Bitte zuerst den Admin-Code eingeben.",
+          "error"
+        );
+
+        return;
+      }
 
       const confirmed =
         confirm(
@@ -485,8 +750,9 @@
         return;
       }
 
-      statusEl.textContent =
-        `${nickname} wird entfernt …`;
+      setLeaderboardStatus(
+        `${nickname} wird entfernt …`
+      );
 
       try {
         const response =
@@ -524,26 +790,347 @@
           );
         }
 
-        statusEl.textContent =
-          `${nickname} wurde entfernt.`;
+        setLeaderboardStatus(
+          `${nickname} wurde entfernt.`,
+          "success"
+        );
 
         await loadLeaderboard();
 
       } catch (error) {
-        console.error(error);
+        console.error(
+          "Löschen fehlgeschlagen:",
+          error
+        );
 
-        statusEl.textContent =
-          error.message;
+        setLeaderboardStatus(
+          error.message,
+          "error"
+        );
       }
     }
 
 
     document
-      .getElementById("load")
+      .getElementById(
+        "load-leaderboard"
+      )
       .addEventListener(
         "click",
         loadLeaderboard
       );
+
+
+    // =========================================
+    // SERVICE WORKER
+    // =========================================
+
+    async function registerServiceWorker() {
+      if (
+        !(
+          "serviceWorker"
+          in navigator
+        )
+      ) {
+        throw new Error(
+          "Service Worker werden von diesem Browser nicht unterstützt."
+        );
+      }
+
+      const registration =
+        await navigator
+          .serviceWorker
+          .register(
+            "./sw.js"
+          );
+
+      await navigator
+        .serviceWorker
+        .ready;
+
+      return registration;
+    }
+
+
+    // =========================================
+    // PUSH-BERECHTIGUNG
+    // =========================================
+
+    document
+      .getElementById(
+        "enable-push"
+      )
+      .addEventListener(
+        "click",
+        async () => {
+
+          try {
+            if (
+              !(
+                "Notification"
+                in window
+              )
+            ) {
+              throw new Error(
+                "Dieser Browser unterstützt keine Benachrichtigungen."
+              );
+            }
+
+            if (
+              !(
+                "PushManager"
+                in window
+              )
+            ) {
+              throw new Error(
+                "Push-Benachrichtigungen werden von diesem Browser nicht unterstützt."
+              );
+            }
+
+            const permission =
+              await Notification
+                .requestPermission();
+
+            if (
+              permission !==
+              "granted"
+            ) {
+              throw new Error(
+                "Benachrichtigungen wurden nicht erlaubt."
+              );
+            }
+
+            await registerServiceWorker();
+
+            setPushStatus(
+              "Benachrichtigungen sind erlaubt. Du kannst das Gerät jetzt registrieren.",
+              "success"
+            );
+
+          } catch (error) {
+            console.error(
+              "Push-Berechtigung:",
+              error
+            );
+
+            setPushStatus(
+              error.message,
+              "error"
+            );
+          }
+        }
+      );
+
+
+    // =========================================
+    // GERÄT REGISTRIEREN
+    // =========================================
+
+    document
+      .getElementById(
+        "register-device"
+      )
+      .addEventListener(
+        "click",
+        async () => {
+
+          const token =
+            tokenEl.value.trim();
+
+          if (!token) {
+            setPushStatus(
+              "Bitte zuerst den Admin-Code eingeben.",
+              "error"
+            );
+
+            return;
+          }
+
+          try {
+            if (
+              Notification.permission
+              !== "granted"
+            ) {
+              throw new Error(
+                "Bitte zuerst Benachrichtigungen erlauben."
+              );
+            }
+
+            setPushStatus(
+              "Gerät wird registriert …"
+            );
+
+            await registerServiceWorker();
+
+            const registration =
+              await navigator
+                .serviceWorker
+                .ready;
+
+
+            // =================================
+            // VAPID PUBLIC KEY LADEN
+            // =================================
+
+            const keyResponse =
+              await fetch(
+                `${API_BASE}/api/public-key`,
+                {
+                  cache:
+                    "no-store"
+                }
+              );
+
+            if (
+              !keyResponse.ok
+            ) {
+              throw new Error(
+                `Public-Key-API: ${keyResponse.status}`
+              );
+            }
+
+            const keyData =
+              await keyResponse.json();
+
+            if (
+              !keyData.publicKey
+            ) {
+              throw new Error(
+                "VAPID Public Key fehlt."
+              );
+            }
+
+
+            // =================================
+            // ALTES ABO ENTFERNEN
+            // =================================
+
+            let subscription =
+              await registration
+                .pushManager
+                .getSubscription();
+
+            if (subscription) {
+              await subscription
+                .unsubscribe();
+            }
+
+
+            // =================================
+            // NEUES ABO ERSTELLEN
+            // =================================
+
+            subscription =
+              await registration
+                .pushManager
+                .subscribe({
+                  userVisibleOnly:
+                    true,
+
+                  applicationServerKey:
+                    urlBase64ToUint8Array(
+                      keyData.publicKey
+                    )
+                });
+
+
+            // =================================
+            // IM BACKEND SPEICHERN
+            // =================================
+
+            const response =
+              await fetch(
+                `${API_BASE}/api/subscribe`,
+                {
+                  method: "POST",
+
+                  headers: {
+                    "Content-Type":
+                      "application/json",
+
+                    "X-Admin-Token":
+                      token
+                  },
+
+                  body:
+                    JSON.stringify(
+                      subscription
+                    )
+                }
+              );
+
+            const responseText =
+              await response.text();
+
+            if (!response.ok) {
+              throw new Error(
+                `Registrierung fehlgeschlagen (${response.status}): ${responseText}`
+              );
+            }
+
+            setPushStatus(
+              "Dieses Gerät ist jetzt für die Lösungswort-Benachrichtigungen registriert.",
+              "success"
+            );
+
+          } catch (error) {
+            console.error(
+              "Push-Registrierung:",
+              error
+            );
+
+            setPushStatus(
+              `Registrierung fehlgeschlagen: ${error.message}`,
+              "error"
+            );
+          }
+        }
+      );
+
+
+    // =========================================
+    // VAPID KEY UMWANDELN
+    // =========================================
+
+    function urlBase64ToUint8Array(
+      base64String
+    ) {
+      const padding =
+        "=".repeat(
+          (
+            4 -
+            base64String.length %
+            4
+          ) %
+          4
+        );
+
+      const base64 =
+        (
+          base64String +
+          padding
+        )
+          .replace(
+            /-/g,
+            "+"
+          )
+          .replace(
+            /_/g,
+            "/"
+          );
+
+      const rawData =
+        atob(base64);
+
+      return Uint8Array.from(
+        [...rawData].map(
+          character =>
+            character
+              .charCodeAt(0)
+        )
+      );
+    }
+
   </script>
 
 </body>
