@@ -16,8 +16,12 @@
 
   <title>Quiz Administration</title>
 
-  <link rel="icon" type="image/png" href="door-notification.png">
-  
+  <link
+    rel="icon"
+    type="image/png"
+    href="door-notification.png"
+  >
+
   <style>
     * {
       box-sizing: border-box;
@@ -63,6 +67,12 @@
 
     h2 {
       margin-top: 0;
+    }
+
+    h3 {
+      margin:
+        0 0
+        14px;
     }
 
     input,
@@ -127,7 +137,6 @@
       color: #991b1b;
 
       font-size: .9rem;
-
       white-space: nowrap;
     }
 
@@ -147,9 +156,7 @@
     .leaderboard-row,
     .device-row {
       display: grid;
-
       gap: 12px;
-
       align-items: center;
 
       padding: 12px 4px;
@@ -212,17 +219,53 @@
       font-weight: 600;
     }
 
-    .info-box {
-      margin-top: 16px;
-      padding: 14px;
+    .stats-grid {
+      display: grid;
 
-      border-radius: 10px;
+      grid-template-columns:
+        repeat(2, 1fr);
 
-      background: #f9fafb;
+      gap: 12px;
 
-      color: #4b5563;
+      margin-top: 18px;
+    }
 
-      font-size: .95rem;
+    .stats-quiz {
+      border:
+        1px solid #e5e7eb;
+
+      border-radius: 14px;
+
+      padding: 18px;
+    }
+
+    .stat-row {
+      display: flex;
+
+      justify-content:
+        space-between;
+
+      gap: 20px;
+
+      padding: 9px 0;
+
+      border-bottom:
+        1px solid #f3f4f6;
+    }
+
+    .stat-row:last-child {
+      border-bottom: 0;
+    }
+
+    .stat-label {
+      color: #6b7280;
+    }
+
+    .stat-value {
+      font-weight: 800;
+
+      font-variant-numeric:
+        tabular-nums;
     }
 
     [hidden] {
@@ -234,6 +277,11 @@
     ) {
       .card {
         padding: 20px;
+      }
+
+      .stats-grid {
+        grid-template-columns:
+          1fr;
       }
 
       .leaderboard-row {
@@ -250,7 +298,8 @@
       }
 
       .device-row {
-        grid-template-columns: 1fr;
+        grid-template-columns:
+          1fr;
       }
 
       .device-row
@@ -264,8 +313,6 @@
 <body>
 
 <main class="container">
-
-  <!-- ADMIN CODE -->
 
   <section class="card">
 
@@ -283,6 +330,163 @@
       placeholder="Admin-Code"
       autocomplete="off"
     >
+
+  </section>
+
+
+  <!-- STATISTIK -->
+
+  <section class="card">
+
+    <h2>
+      Besucherstatistik
+    </h2>
+
+    <p>
+      Anonyme Statistik der beiden
+      Quiz-Webseiten.
+    </p>
+
+    <button
+      id="load-stats"
+      class="primary"
+    >
+      Statistik laden
+    </button>
+
+    <p
+      id="stats-status"
+      class="status"
+    ></p>
+
+    <div
+      id="stats-content"
+      class="stats-grid"
+      hidden
+    >
+
+      <div class="stats-quiz">
+
+        <h3>
+          Quiz 1 – Knoten
+        </h3>
+
+        <div class="stat-row">
+          <span class="stat-label">
+            Besucher heute
+          </span>
+
+          <span
+            class="stat-value"
+            id="q1-visitors-today"
+          >
+            0
+          </span>
+        </div>
+
+        <div class="stat-row">
+          <span class="stat-label">
+            Aufrufe heute
+          </span>
+
+          <span
+            class="stat-value"
+            id="q1-views-today"
+          >
+            0
+          </span>
+        </div>
+
+        <div class="stat-row">
+          <span class="stat-label">
+            Besucher insgesamt
+          </span>
+
+          <span
+            class="stat-value"
+            id="q1-visitors-total"
+          >
+            0
+          </span>
+        </div>
+
+        <div class="stat-row">
+          <span class="stat-label">
+            Aufrufe insgesamt
+          </span>
+
+          <span
+            class="stat-value"
+            id="q1-views-total"
+          >
+            0
+          </span>
+        </div>
+
+      </div>
+
+
+      <div class="stats-quiz">
+
+        <h3>
+          Quiz 2 – Allgemeinwissen
+        </h3>
+
+        <div class="stat-row">
+          <span class="stat-label">
+            Besucher heute
+          </span>
+
+          <span
+            class="stat-value"
+            id="q2-visitors-today"
+          >
+            0
+          </span>
+        </div>
+
+        <div class="stat-row">
+          <span class="stat-label">
+            Aufrufe heute
+          </span>
+
+          <span
+            class="stat-value"
+            id="q2-views-today"
+          >
+            0
+          </span>
+        </div>
+
+        <div class="stat-row">
+          <span class="stat-label">
+            Besucher insgesamt
+          </span>
+
+          <span
+            class="stat-value"
+            id="q2-visitors-total"
+          >
+            0
+          </span>
+        </div>
+
+        <div class="stat-row">
+          <span class="stat-label">
+            Aufrufe insgesamt
+          </span>
+
+          <span
+            class="stat-value"
+            id="q2-views-total"
+          >
+            0
+          </span>
+        </div>
+
+      </div>
+
+    </div>
 
   </section>
 
@@ -328,14 +532,16 @@
     hidden
   >
 
-    <h2>Einträge</h2>
+    <h2>
+      Einträge
+    </h2>
 
     <div id="leaderboard"></div>
 
   </section>
 
 
-  <!-- PUSH REGISTRIEREN -->
+  <!-- PUSH -->
 
   <section class="card">
 
@@ -378,7 +584,7 @@
   </section>
 
 
-  <!-- GERÄTELISTE -->
+  <!-- GERÄTE -->
 
   <section class="card">
 
@@ -496,6 +702,142 @@ function urlBase64ToUint8Array(
 
 
 // =========================================
+// STATISTIK
+// =========================================
+
+async function loadStats() {
+  const token =
+    tokenEl.value.trim();
+
+  const status =
+    document.getElementById(
+      "stats-status"
+    );
+
+  const content =
+    document.getElementById(
+      "stats-content"
+    );
+
+  if (!token) {
+    status.textContent =
+      "Bitte Admin-Code eingeben.";
+
+    return;
+  }
+
+  status.textContent =
+    "Statistik wird geladen …";
+
+  try {
+    const response =
+      await fetch(
+        `${API_BASE}/api/admin-stats`,
+        {
+          headers: {
+            "X-Admin-Token":
+              token
+          },
+
+          cache: "no-store"
+        }
+      );
+
+    if (!response.ok) {
+      throw new Error(
+        response.status === 401
+          ? "Admin-Code ist falsch."
+          : `API-Fehler ${response.status}`
+      );
+    }
+
+    const data =
+      await response.json();
+
+    document
+      .getElementById(
+        "q1-visitors-today"
+      )
+      .textContent =
+        data.quiz1.visitorsToday;
+
+    document
+      .getElementById(
+        "q1-views-today"
+      )
+      .textContent =
+        data.quiz1.viewsToday;
+
+    document
+      .getElementById(
+        "q1-visitors-total"
+      )
+      .textContent =
+        data.quiz1.visitorsTotal;
+
+    document
+      .getElementById(
+        "q1-views-total"
+      )
+      .textContent =
+        data.quiz1.viewsTotal;
+
+
+    document
+      .getElementById(
+        "q2-visitors-today"
+      )
+      .textContent =
+        data.quiz2.visitorsToday;
+
+    document
+      .getElementById(
+        "q2-views-today"
+      )
+      .textContent =
+        data.quiz2.viewsToday;
+
+    document
+      .getElementById(
+        "q2-visitors-total"
+      )
+      .textContent =
+        data.quiz2.visitorsTotal;
+
+    document
+      .getElementById(
+        "q2-views-total"
+      )
+      .textContent =
+        data.quiz2.viewsTotal;
+
+    content.hidden = false;
+
+    status.textContent =
+      "Statistik geladen.";
+
+  } catch (error) {
+    console.error(error);
+
+    content.hidden = true;
+
+    status.textContent =
+      error.message;
+  }
+}
+
+
+document
+  .getElementById(
+    "load-stats"
+  )
+  .addEventListener(
+    "click",
+    loadStats
+  );
+
+
+// =========================================
 // BESTENLISTE
 // =========================================
 
@@ -564,9 +906,7 @@ async function loadLeaderboard() {
 }
 
 
-function renderLeaderboard(
-  entries
-) {
+function renderLeaderboard(entries) {
   const card =
     document.getElementById(
       "leaderboard-card"
@@ -599,7 +939,6 @@ function renderLeaderboard(
       row.className =
         "leaderboard-row";
 
-
       const rank =
         document.createElement(
           "div"
@@ -611,7 +950,6 @@ function renderLeaderboard(
       rank.textContent =
         `${index + 1}.`;
 
-
       const name =
         document.createElement(
           "div"
@@ -622,7 +960,6 @@ function renderLeaderboard(
 
       name.textContent =
         entry.nickname;
-
 
       const time =
         document.createElement(
@@ -636,7 +973,6 @@ function renderLeaderboard(
         formatTime(
           Number(entry.time)
         );
-
 
       const button =
         document.createElement(
@@ -654,7 +990,6 @@ function renderLeaderboard(
           deletePlayer(
             entry.nickname
           );
-
 
       row.append(
         rank,
@@ -1047,6 +1382,7 @@ function renderDevices(devices) {
     );
 
   devices.forEach(device => {
+
     const row =
       document.createElement(
         "div"
@@ -1055,12 +1391,10 @@ function renderDevices(devices) {
     row.className =
       "device-row";
 
-
     const info =
       document.createElement(
         "div"
       );
-
 
     const name =
       document.createElement(
@@ -1073,9 +1407,9 @@ function renderDevices(devices) {
     name.textContent =
       device.name;
 
-
     if (
-      device.id === currentId
+      device.id ===
+      currentId
     ) {
       const badge =
         document.createElement(
@@ -1088,9 +1422,10 @@ function renderDevices(devices) {
       badge.textContent =
         "dieses Gerät";
 
-      name.appendChild(badge);
+      name.appendChild(
+        badge
+      );
     }
-
 
     const date =
       document.createElement(
@@ -1106,12 +1441,10 @@ function renderDevices(devices) {
         device.createdAt
       );
 
-
     info.append(
       name,
       date
     );
-
 
     const button =
       document.createElement(
@@ -1130,7 +1463,6 @@ function renderDevices(devices) {
           device.id,
           device.name
         );
-
 
     row.append(
       info,
