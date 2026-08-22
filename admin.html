@@ -16,8 +16,6 @@
 
   <title>Quiz Administration</title>
 
-  <link rel="icon" type="image/png" href="door-notification.png">
-  
   <style>
     * {
       box-sizing: border-box;
@@ -48,11 +46,8 @@
 
     .card {
       background: white;
-
       border-radius: 18px;
-
       padding: 24px;
-
       margin-bottom: 18px;
 
       box-shadow:
@@ -61,7 +56,6 @@
     }
 
     h1 {
-      line-height: 1.25;
       margin: 0 0 22px;
     }
 
@@ -84,10 +78,10 @@
 
       border-radius: 10px;
 
+      font-size: 1rem;
+
       background: white;
       color: #111827;
-
-      font-size: 1rem;
     }
 
     input:focus,
@@ -103,7 +97,6 @@
 
     button {
       border: 0;
-
       border-radius: 11px;
 
       padding: 13px 17px;
@@ -115,19 +108,15 @@
 
     .primary {
       width: 100%;
-
       background: #111827;
       color: white;
-
       margin-top: 8px;
     }
 
     .secondary {
       width: 100%;
-
       background: #e5e7eb;
       color: #111827;
-
       margin-top: 10px;
     }
 
@@ -142,9 +131,6 @@
 
     .status {
       min-height: 1.4em;
-
-      margin-bottom: 0;
-
       color: #4b5563;
     }
 
@@ -156,59 +142,76 @@
       color: #b91c1c;
     }
 
-    .leaderboard-row {
+    .leaderboard-row,
+    .device-row {
       display: grid;
-
-      grid-template-columns:
-        44px
-        minmax(0, 1fr)
-        90px
-        auto;
 
       gap: 12px;
 
       align-items: center;
 
-      min-height: 54px;
-
-      padding:
-        10px
-        4px;
+      padding: 12px 4px;
 
       border-bottom:
         1px solid #e5e7eb;
     }
 
+    .leaderboard-row {
+      grid-template-columns:
+        44px
+        minmax(0, 1fr)
+        90px
+        auto;
+    }
+
+    .device-row {
+      grid-template-columns:
+        minmax(0, 1fr)
+        auto;
+    }
+
     .leaderboard-rank {
       color: #6b7280;
-
       font-weight: 800;
-
       text-align: right;
     }
 
-    .leaderboard-name {
-      font-weight: 600;
-
-      overflow: hidden;
-
-      text-overflow: ellipsis;
-
-      white-space: nowrap;
+    .leaderboard-name,
+    .device-name {
+      font-weight: 700;
     }
 
     .leaderboard-time {
       font-weight: 800;
-
       text-align: right;
 
       font-variant-numeric:
         tabular-nums;
     }
 
+    .device-date {
+      color: #6b7280;
+      font-size: .9rem;
+      margin-top: 3px;
+    }
+
+    .current-device {
+      display: inline-block;
+
+      margin-left: 8px;
+
+      padding: 2px 7px;
+
+      border-radius: 999px;
+
+      background: #e5e7eb;
+
+      font-size: .75rem;
+      font-weight: 600;
+    }
+
     .info-box {
       margin-top: 16px;
-
       padding: 14px;
 
       border-radius: 10px;
@@ -224,7 +227,9 @@
       display: none !important;
     }
 
-    @media (max-width: 560px) {
+    @media (
+      max-width: 560px
+    ) {
       .card {
         padding: 20px;
       }
@@ -236,532 +241,675 @@
           78px;
       }
 
+      .leaderboard-row
       .delete-button {
         grid-column: 2 / 4;
+        width: 100%;
+      }
 
+      .device-row {
+        grid-template-columns: 1fr;
+      }
+
+      .device-row
+      .delete-button {
         width: 100%;
       }
     }
   </style>
 </head>
 
-
 <body>
 
-  <main class="container">
+<main class="container">
 
-    <!-- =========================================
-         ADMIN
-    ========================================== -->
+  <!-- ADMIN CODE -->
 
-    <section class="card">
+  <section class="card">
 
-      <h1>
-        Quiz Administration
-      </h1>
+    <h1>
+      Quiz Administration
+    </h1>
 
-      <p>
-        Gib deinen Admin-Code ein.
-        Er wird für die Bestenliste und
-        die Push-Registrierung verwendet.
-      </p>
+    <p>
+      Gib deinen Admin-Code ein.
+    </p>
 
-      <input
-        id="admin-token"
-        type="password"
-        placeholder="Admin-Code"
-        autocomplete="off"
-      >
-
-    </section>
-
-
-    <!-- =========================================
-         BESTENLISTE
-    ========================================== -->
-
-    <section class="card">
-
-      <h2>
-        Bestenliste verwalten
-      </h2>
-
-      <p>
-        Wähle die Bestenliste aus,
-        die du verwalten möchtest.
-      </p>
-
-      <select id="quiz-select">
-
-        <option value="1">
-          Quiz 1 – Knoten
-        </option>
-
-        <option value="2">
-          Quiz 2 – Allgemeinwissen
-        </option>
-
-      </select>
-
-      <button
-        id="load-leaderboard"
-        class="primary"
-      >
-        Bestenliste laden
-      </button>
-
-      <p
-        id="leaderboard-status"
-        class="status"
-      ></p>
-
-    </section>
-
-
-    <!-- =========================================
-         BESTENLISTEN-EINTRÄGE
-    ========================================== -->
-
-    <section
-      class="card"
-      id="leaderboard-card"
-      hidden
+    <input
+      id="admin-token"
+      type="password"
+      placeholder="Admin-Code"
+      autocomplete="off"
     >
 
-      <h2>
-        Einträge
-      </h2>
-
-      <div id="leaderboard"></div>
-
-    </section>
+  </section>
 
 
-    <!-- =========================================
-         PUSH
-    ========================================== -->
+  <!-- BESTENLISTE -->
 
-    <section class="card">
+  <section class="card">
 
-      <h2>
-        Push-Benachrichtigungen
-      </h2>
+    <h2>
+      Bestenliste verwalten
+    </h2>
 
-      <p>
-        Hier kannst du dieses Gerät für die
-        stündlichen Lösungswort-Benachrichtigungen
-        registrieren.
-      </p>
+    <select id="quiz-select">
 
-      <button
-        id="enable-push"
-        class="secondary"
-      >
-        Benachrichtigungen erlauben
-      </button>
+      <option value="1">
+        Quiz 1 – Knoten
+      </option>
 
-      <button
-        id="register-device"
-        class="primary"
-      >
-        Dieses Gerät registrieren
-      </button>
+      <option value="2">
+        Quiz 2 – Allgemeinwissen
+      </option>
 
-      <p
-        id="push-status"
-        class="status"
-      ></p>
+    </select>
 
-      <div class="info-box">
-        Bei einer erneuten Registrierung wird
-        das bisherige Push-Abo dieses Browsers
-        entfernt und anschließend neu erstellt.
-      </div>
+    <button
+      id="load-leaderboard"
+      class="primary"
+    >
+      Bestenliste laden
+    </button>
 
-    </section>
+    <p
+      id="leaderboard-status"
+      class="status"
+    ></p>
 
-  </main>
+  </section>
 
 
-  <script>
+  <section
+    class="card"
+    id="leaderboard-card"
+    hidden
+  >
 
-    // =========================================
-    // BACKEND
-    // =========================================
+    <h2>Einträge</h2>
 
-    const API_BASE =
-      "https://mein-quiz.vercel.app";
+    <div id="leaderboard"></div>
+
+  </section>
 
 
-    // =========================================
-    // ELEMENTE
-    // =========================================
+  <!-- PUSH REGISTRIEREN -->
 
-    const tokenEl =
-      document.getElementById(
-        "admin-token"
-      );
+  <section class="card">
 
-    const quizEl =
-      document.getElementById(
+    <h2>
+      Push-Gerät registrieren
+    </h2>
+
+    <p>
+      Gib diesem Gerät einen Namen,
+      damit du es später wiedererkennst.
+    </p>
+
+    <input
+      id="device-name"
+      type="text"
+      maxlength="40"
+      placeholder="z. B. Mein Handy"
+      autocomplete="off"
+    >
+
+    <button
+      id="enable-push"
+      class="secondary"
+    >
+      Benachrichtigungen erlauben
+    </button>
+
+    <button
+      id="register-device"
+      class="primary"
+    >
+      Dieses Gerät registrieren
+    </button>
+
+    <p
+      id="push-status"
+      class="status"
+    ></p>
+
+  </section>
+
+
+  <!-- GERÄTELISTE -->
+
+  <section class="card">
+
+    <h2>
+      Registrierte Geräte
+    </h2>
+
+    <button
+      id="load-devices"
+      class="secondary"
+    >
+      Geräteliste aktualisieren
+    </button>
+
+    <p
+      id="devices-status"
+      class="status"
+    ></p>
+
+    <div id="devices"></div>
+
+  </section>
+
+</main>
+
+
+<script>
+
+const API_BASE =
+  "https://mein-quiz.vercel.app";
+
+const tokenEl =
+  document.getElementById(
+    "admin-token"
+  );
+
+
+// =========================================
+// HILFSFUNKTIONEN
+// =========================================
+
+function formatTime(ms) {
+  const totalTenths =
+    Math.floor(ms / 100);
+
+  const minutes =
+    Math.floor(
+      totalTenths / 600
+    );
+
+  const seconds =
+    Math.floor(
+      (totalTenths % 600) / 10
+    );
+
+  const tenths =
+    totalTenths % 10;
+
+  return (
+    String(minutes)
+      .padStart(2, "0") +
+    ":" +
+    String(seconds)
+      .padStart(2, "0") +
+    "." +
+    tenths
+  );
+}
+
+
+function formatDate(timestamp) {
+  if (!timestamp) {
+    return "Datum unbekannt";
+  }
+
+  return new Date(
+    timestamp
+  ).toLocaleString(
+    "de-DE"
+  );
+}
+
+
+function urlBase64ToUint8Array(
+  base64String
+) {
+  const padding =
+    "=".repeat(
+      (
+        4 -
+        base64String.length %
+        4
+      ) %
+      4
+    );
+
+  const base64 =
+    (
+      base64String +
+      padding
+    )
+      .replace(/-/g, "+")
+      .replace(/_/g, "/");
+
+  const raw =
+    atob(base64);
+
+  return Uint8Array.from(
+    [...raw].map(
+      char =>
+        char.charCodeAt(0)
+    )
+  );
+}
+
+
+// =========================================
+// BESTENLISTE
+// =========================================
+
+async function loadLeaderboard() {
+  const token =
+    tokenEl.value.trim();
+
+  const quiz =
+    document
+      .getElementById(
         "quiz-select"
+      )
+      .value;
+
+  const status =
+    document.getElementById(
+      "leaderboard-status"
+    );
+
+  if (!token) {
+    status.textContent =
+      "Bitte Admin-Code eingeben.";
+
+    return;
+  }
+
+  status.textContent =
+    "Wird geladen …";
+
+  try {
+    const response =
+      await fetch(
+        `${API_BASE}/api/admin-leaderboard?quiz=${quiz}`,
+        {
+          headers: {
+            "X-Admin-Token":
+              token
+          },
+
+          cache: "no-store"
+        }
       );
 
-    const leaderboardStatusEl =
-      document.getElementById(
-        "leaderboard-status"
+    if (!response.ok) {
+      throw new Error(
+        response.status === 401
+          ? "Admin-Code ist falsch."
+          : `API-Fehler ${response.status}`
+      );
+    }
+
+    const data =
+      await response.json();
+
+    renderLeaderboard(
+      data.leaderboard || []
+    );
+
+    status.textContent =
+      "Bestenliste geladen.";
+
+  } catch (error) {
+    status.textContent =
+      error.message;
+  }
+}
+
+
+function renderLeaderboard(
+  entries
+) {
+  const card =
+    document.getElementById(
+      "leaderboard-card"
+    );
+
+  const container =
+    document.getElementById(
+      "leaderboard"
+    );
+
+  container.innerHTML = "";
+
+  card.hidden = false;
+
+  if (!entries.length) {
+    container.textContent =
+      "Keine Einträge vorhanden.";
+
+    return;
+  }
+
+  entries.forEach(
+    (entry, index) => {
+
+      const row =
+        document.createElement(
+          "div"
+        );
+
+      row.className =
+        "leaderboard-row";
+
+
+      const rank =
+        document.createElement(
+          "div"
+        );
+
+      rank.className =
+        "leaderboard-rank";
+
+      rank.textContent =
+        `${index + 1}.`;
+
+
+      const name =
+        document.createElement(
+          "div"
+        );
+
+      name.className =
+        "leaderboard-name";
+
+      name.textContent =
+        entry.nickname;
+
+
+      const time =
+        document.createElement(
+          "div"
+        );
+
+      time.className =
+        "leaderboard-time";
+
+      time.textContent =
+        formatTime(
+          Number(entry.time)
+        );
+
+
+      const button =
+        document.createElement(
+          "button"
+        );
+
+      button.className =
+        "delete-button";
+
+      button.textContent =
+        "Entfernen";
+
+      button.onclick =
+        () =>
+          deletePlayer(
+            entry.nickname
+          );
+
+
+      row.append(
+        rank,
+        name,
+        time,
+        button
       );
 
-    const leaderboardEl =
-      document.getElementById(
-        "leaderboard"
+      container.appendChild(
+        row
       );
-
-    const leaderboardCardEl =
-      document.getElementById(
-        "leaderboard-card"
-      );
-
-    const pushStatusEl =
-      document.getElementById(
-        "push-status"
-      );
+    }
+  );
+}
 
 
-    // =========================================
-    // STATUS
-    // =========================================
+async function deletePlayer(
+  nickname
+) {
+  const token =
+    tokenEl.value.trim();
 
-    function setLeaderboardStatus(
-      text,
-      type = ""
-    ) {
-      leaderboardStatusEl.textContent =
-        text;
+  const quiz =
+    document
+      .getElementById(
+        "quiz-select"
+      )
+      .value;
 
-      leaderboardStatusEl.className =
-        "status";
+  if (
+    !confirm(
+      `"${nickname}" wirklich entfernen?`
+    )
+  ) {
+    return;
+  }
 
-      if (type) {
-        leaderboardStatusEl
-          .classList
-          .add(type);
+  const response =
+    await fetch(
+      `${API_BASE}/api/admin-leaderboard?quiz=${quiz}`,
+      {
+        method: "DELETE",
+
+        headers: {
+          "Content-Type":
+            "application/json",
+
+          "X-Admin-Token":
+            token
+        },
+
+        body:
+          JSON.stringify({
+            nickname
+          })
+      }
+    );
+
+  if (!response.ok) {
+    alert(
+      "Löschen fehlgeschlagen."
+    );
+
+    return;
+  }
+
+  await loadLeaderboard();
+}
+
+
+document
+  .getElementById(
+    "load-leaderboard"
+  )
+  .addEventListener(
+    "click",
+    loadLeaderboard
+  );
+
+
+// =========================================
+// SERVICE WORKER
+// =========================================
+
+async function getRegistration() {
+  if (
+    !(
+      "serviceWorker"
+      in navigator
+    )
+  ) {
+    throw new Error(
+      "Service Worker nicht unterstützt."
+    );
+  }
+
+  await navigator
+    .serviceWorker
+    .register("./sw.js");
+
+  return await navigator
+    .serviceWorker
+    .ready;
+}
+
+
+// =========================================
+// PUSH ERLAUBEN
+// =========================================
+
+document
+  .getElementById(
+    "enable-push"
+  )
+  .addEventListener(
+    "click",
+    async () => {
+
+      const status =
+        document.getElementById(
+          "push-status"
+        );
+
+      try {
+        const permission =
+          await Notification
+            .requestPermission();
+
+        if (
+          permission !==
+          "granted"
+        ) {
+          throw new Error(
+            "Benachrichtigungen wurden nicht erlaubt."
+          );
+        }
+
+        await getRegistration();
+
+        status.textContent =
+          "Benachrichtigungen sind erlaubt.";
+
+      } catch (error) {
+        status.textContent =
+          error.message;
       }
     }
+  );
 
 
-    function setPushStatus(
-      text,
-      type = ""
-    ) {
-      pushStatusEl.textContent =
-        text;
+// =========================================
+// GERÄT REGISTRIEREN
+// =========================================
 
-      pushStatusEl.className =
-        "status";
+document
+  .getElementById(
+    "register-device"
+  )
+  .addEventListener(
+    "click",
+    async () => {
 
-      if (type) {
-        pushStatusEl
-          .classList
-          .add(type);
-      }
-    }
-
-
-    // =========================================
-    // ZEIT FORMATIEREN
-    // =========================================
-
-    function formatTime(
-      milliseconds
-    ) {
-      const totalTenths =
-        Math.floor(
-          milliseconds / 100
+      const status =
+        document.getElementById(
+          "push-status"
         );
 
-      const minutes =
-        Math.floor(
-          totalTenths / 600
-        );
-
-      const seconds =
-        Math.floor(
-          (totalTenths % 600) / 10
-        );
-
-      const tenths =
-        totalTenths % 10;
-
-      return (
-        String(minutes)
-          .padStart(2, "0") +
-        ":" +
-        String(seconds)
-          .padStart(2, "0") +
-        "." +
-        tenths
-      );
-    }
-
-
-    // =========================================
-    // BESTENLISTE LADEN
-    // =========================================
-
-    async function loadLeaderboard() {
       const token =
         tokenEl.value.trim();
 
-      const quiz =
-        quizEl.value;
+      const deviceName =
+        document
+          .getElementById(
+            "device-name"
+          )
+          .value
+          .trim();
 
       if (!token) {
-        setLeaderboardStatus(
-          "Bitte zuerst den Admin-Code eingeben.",
-          "error"
-        );
+        status.textContent =
+          "Bitte Admin-Code eingeben.";
 
         return;
       }
 
-      setLeaderboardStatus(
-        "Bestenliste wird geladen …"
-      );
+      if (!deviceName) {
+        status.textContent =
+          "Bitte einen Gerätenamen eingeben.";
+
+        return;
+      }
 
       try {
-        const response =
-          await fetch(
-            `${API_BASE}/api/admin-leaderboard?quiz=${quiz}`,
-            {
-              headers: {
-                "X-Admin-Token":
-                  token
-              },
+        if (
+          Notification.permission !==
+          "granted"
+        ) {
+          throw new Error(
+            "Bitte zuerst Benachrichtigungen erlauben."
+          );
+        }
 
+        status.textContent =
+          "Gerät wird registriert …";
+
+        const registration =
+          await getRegistration();
+
+        const keyResponse =
+          await fetch(
+            `${API_BASE}/api/public-key`,
+            {
               cache: "no-store"
             }
           );
 
-        if (
-          response.status === 401
-        ) {
+        if (!keyResponse.ok) {
           throw new Error(
-            "Admin-Code ist falsch."
+            "Public Key konnte nicht geladen werden."
           );
         }
 
-        if (!response.ok) {
-          throw new Error(
-            `API-Fehler ${response.status}`
-          );
+        const keyData =
+          await keyResponse.json();
+
+        let oldSubscription =
+          await registration
+            .pushManager
+            .getSubscription();
+
+        if (oldSubscription) {
+          await oldSubscription
+            .unsubscribe();
         }
 
-        const data =
-          await response.json();
+        const subscription =
+          await registration
+            .pushManager
+            .subscribe({
+              userVisibleOnly: true,
 
-        renderLeaderboard(
-          Array.isArray(
-            data.leaderboard
-          )
-            ? data.leaderboard
-            : []
-        );
+              applicationServerKey:
+                urlBase64ToUint8Array(
+                  keyData.publicKey
+                )
+            });
 
-        setLeaderboardStatus(
-          "Bestenliste wurde geladen.",
-          "success"
-        );
+        const replaceDeviceId =
+          localStorage.getItem(
+            "pushDeviceId"
+          ) || "";
 
-      } catch (error) {
-        console.error(
-          "Bestenlisten-Fehler:",
-          error
-        );
-
-        leaderboardCardEl.hidden =
-          true;
-
-        setLeaderboardStatus(
-          error.message,
-          "error"
-        );
-      }
-    }
-
-
-    // =========================================
-    // BESTENLISTE ANZEIGEN
-    // =========================================
-
-    function renderLeaderboard(
-      entries
-    ) {
-      leaderboardEl.innerHTML =
-        "";
-
-      leaderboardCardEl.hidden =
-        false;
-
-      if (
-        entries.length === 0
-      ) {
-        const empty =
-          document.createElement(
-            "p"
-          );
-
-        empty.className =
-          "status";
-
-        empty.textContent =
-          "Keine Einträge vorhanden.";
-
-        leaderboardEl.appendChild(
-          empty
-        );
-
-        return;
-      }
-
-      entries.forEach(
-        (entry, index) => {
-
-          const row =
-            document.createElement(
-              "div"
-            );
-
-          row.className =
-            "leaderboard-row";
-
-
-          // Platz
-
-          const rank =
-            document.createElement(
-              "div"
-            );
-
-          rank.className =
-            "leaderboard-rank";
-
-          rank.textContent =
-            `${index + 1}.`;
-
-
-          // Name
-
-          const name =
-            document.createElement(
-              "div"
-            );
-
-          name.className =
-            "leaderboard-name";
-
-          name.textContent =
-            entry.nickname;
-
-
-          // Zeit
-
-          const time =
-            document.createElement(
-              "div"
-            );
-
-          time.className =
-            "leaderboard-time";
-
-          time.textContent =
-            formatTime(
-              Number(entry.time)
-            );
-
-
-          // Löschen
-
-          const deleteButton =
-            document.createElement(
-              "button"
-            );
-
-          deleteButton.className =
-            "delete-button";
-
-          deleteButton.textContent =
-            "Entfernen";
-
-          deleteButton.addEventListener(
-            "click",
-            () => {
-              deletePlayer(
-                entry.nickname
-              );
-            }
-          );
-
-
-          row.appendChild(rank);
-
-          row.appendChild(name);
-
-          row.appendChild(time);
-
-          row.appendChild(
-            deleteButton
-          );
-
-          leaderboardEl.appendChild(
-            row
-          );
-        }
-      );
-    }
-
-
-    // =========================================
-    // SPIELER LÖSCHEN
-    // =========================================
-
-    async function deletePlayer(
-      nickname
-    ) {
-      const token =
-        tokenEl.value.trim();
-
-      const quiz =
-        quizEl.value;
-
-      if (!token) {
-        setLeaderboardStatus(
-          "Bitte zuerst den Admin-Code eingeben.",
-          "error"
-        );
-
-        return;
-      }
-
-      const confirmed =
-        confirm(
-          `"${nickname}" wirklich aus der Bestenliste entfernen?`
-        );
-
-      if (!confirmed) {
-        return;
-      }
-
-      setLeaderboardStatus(
-        `${nickname} wird entfernt …`
-      );
-
-      try {
         const response =
           await fetch(
-            `${API_BASE}/api/admin-leaderboard?quiz=${quiz}`,
+            `${API_BASE}/api/subscribe`,
             {
-              method: "DELETE",
+              method: "POST",
 
               headers: {
                 "Content-Type":
@@ -773,367 +921,303 @@
 
               body:
                 JSON.stringify({
-                  nickname
+                  deviceName,
+                  subscription,
+                  replaceDeviceId
                 })
             }
           );
 
-        if (
-          response.status === 401
-        ) {
-          throw new Error(
-            "Admin-Code ist falsch."
-          );
-        }
-
         if (!response.ok) {
           throw new Error(
-            `Löschen fehlgeschlagen (${response.status})`
+            `Registrierung fehlgeschlagen (${response.status})`
           );
         }
 
-        setLeaderboardStatus(
-          `${nickname} wurde entfernt.`,
-          "success"
+        const data =
+          await response.json();
+
+        localStorage.setItem(
+          "pushDeviceId",
+          data.device.id
         );
 
-        await loadLeaderboard();
+        status.textContent =
+          "Gerät erfolgreich registriert.";
+
+        await loadDevices();
 
       } catch (error) {
-        console.error(
-          "Löschen fehlgeschlagen:",
-          error
-        );
+        console.error(error);
 
-        setLeaderboardStatus(
-          error.message,
-          "error"
-        );
+        status.textContent =
+          error.message;
       }
     }
+  );
 
 
-    document
-      .getElementById(
-        "load-leaderboard"
-      )
-      .addEventListener(
-        "click",
-        loadLeaderboard
-      );
+// =========================================
+// GERÄTELISTE
+// =========================================
 
+async function loadDevices() {
+  const token =
+    tokenEl.value.trim();
 
-    // =========================================
-    // SERVICE WORKER
-    // =========================================
+  const status =
+    document.getElementById(
+      "devices-status"
+    );
 
-    async function registerServiceWorker() {
-      if (
-        !(
-          "serviceWorker"
-          in navigator
-        )
-      ) {
-        throw new Error(
-          "Service Worker werden von diesem Browser nicht unterstützt."
-        );
-      }
+  const container =
+    document.getElementById(
+      "devices"
+    );
 
-      const registration =
-        await navigator
-          .serviceWorker
-          .register(
-            "./sw.js"
-          );
+  if (!token) {
+    status.textContent =
+      "Bitte Admin-Code eingeben.";
 
-      await navigator
-        .serviceWorker
-        .ready;
+    return;
+  }
 
-      return registration;
-    }
+  status.textContent =
+    "Geräte werden geladen …";
 
+  try {
+    const response =
+      await fetch(
+        `${API_BASE}/api/admin-devices`,
+        {
+          headers: {
+            "X-Admin-Token":
+              token
+          },
 
-    // =========================================
-    // PUSH-BERECHTIGUNG
-    // =========================================
-
-    document
-      .getElementById(
-        "enable-push"
-      )
-      .addEventListener(
-        "click",
-        async () => {
-
-          try {
-            if (
-              !(
-                "Notification"
-                in window
-              )
-            ) {
-              throw new Error(
-                "Dieser Browser unterstützt keine Benachrichtigungen."
-              );
-            }
-
-            if (
-              !(
-                "PushManager"
-                in window
-              )
-            ) {
-              throw new Error(
-                "Push-Benachrichtigungen werden von diesem Browser nicht unterstützt."
-              );
-            }
-
-            const permission =
-              await Notification
-                .requestPermission();
-
-            if (
-              permission !==
-              "granted"
-            ) {
-              throw new Error(
-                "Benachrichtigungen wurden nicht erlaubt."
-              );
-            }
-
-            await registerServiceWorker();
-
-            setPushStatus(
-              "Benachrichtigungen sind erlaubt. Du kannst das Gerät jetzt registrieren.",
-              "success"
-            );
-
-          } catch (error) {
-            console.error(
-              "Push-Berechtigung:",
-              error
-            );
-
-            setPushStatus(
-              error.message,
-              "error"
-            );
-          }
+          cache: "no-store"
         }
       );
 
+    if (!response.ok) {
+      throw new Error(
+        response.status === 401
+          ? "Admin-Code ist falsch."
+          : `API-Fehler ${response.status}`
+      );
+    }
 
-    // =========================================
-    // GERÄT REGISTRIEREN
-    // =========================================
+    const data =
+      await response.json();
 
-    document
-      .getElementById(
-        "register-device"
-      )
-      .addEventListener(
-        "click",
-        async () => {
+    renderDevices(
+      data.devices || []
+    );
 
-          const token =
-            tokenEl.value.trim();
+    status.textContent =
+      `${data.devices.length} Gerät(e) registriert.`;
 
-          if (!token) {
-            setPushStatus(
-              "Bitte zuerst den Admin-Code eingeben.",
-              "error"
-            );
-
-            return;
-          }
-
-          try {
-            if (
-              Notification.permission
-              !== "granted"
-            ) {
-              throw new Error(
-                "Bitte zuerst Benachrichtigungen erlauben."
-              );
-            }
-
-            setPushStatus(
-              "Gerät wird registriert …"
-            );
-
-            await registerServiceWorker();
-
-            const registration =
-              await navigator
-                .serviceWorker
-                .ready;
+  } catch (error) {
+    status.textContent =
+      error.message;
+  }
+}
 
 
-            // =================================
-            // VAPID PUBLIC KEY LADEN
-            // =================================
+function renderDevices(devices) {
+  const container =
+    document.getElementById(
+      "devices"
+    );
 
-            const keyResponse =
-              await fetch(
-                `${API_BASE}/api/public-key`,
-                {
-                  cache:
-                    "no-store"
-                }
-              );
+  container.innerHTML = "";
 
-            if (
-              !keyResponse.ok
-            ) {
-              throw new Error(
-                `Public-Key-API: ${keyResponse.status}`
-              );
-            }
+  if (!devices.length) {
+    container.textContent =
+      "Keine Geräte registriert.";
 
-            const keyData =
-              await keyResponse.json();
+    return;
+  }
 
-            if (
-              !keyData.publicKey
-            ) {
-              throw new Error(
-                "VAPID Public Key fehlt."
-              );
-            }
+  const currentId =
+    localStorage.getItem(
+      "pushDeviceId"
+    );
+
+  devices.forEach(device => {
+    const row =
+      document.createElement(
+        "div"
+      );
+
+    row.className =
+      "device-row";
 
 
-            // =================================
-            // ALTES ABO ENTFERNEN
-            // =================================
-
-            let subscription =
-              await registration
-                .pushManager
-                .getSubscription();
-
-            if (subscription) {
-              await subscription
-                .unsubscribe();
-            }
-
-
-            // =================================
-            // NEUES ABO ERSTELLEN
-            // =================================
-
-            subscription =
-              await registration
-                .pushManager
-                .subscribe({
-                  userVisibleOnly:
-                    true,
-
-                  applicationServerKey:
-                    urlBase64ToUint8Array(
-                      keyData.publicKey
-                    )
-                });
-
-
-            // =================================
-            // IM BACKEND SPEICHERN
-            // =================================
-
-            const response =
-              await fetch(
-                `${API_BASE}/api/subscribe`,
-                {
-                  method: "POST",
-
-                  headers: {
-                    "Content-Type":
-                      "application/json",
-
-                    "X-Admin-Token":
-                      token
-                  },
-
-                  body:
-                    JSON.stringify(
-                      subscription
-                    )
-                }
-              );
-
-            const responseText =
-              await response.text();
-
-            if (!response.ok) {
-              throw new Error(
-                `Registrierung fehlgeschlagen (${response.status}): ${responseText}`
-              );
-            }
-
-            setPushStatus(
-              "Dieses Gerät ist jetzt für die Lösungswort-Benachrichtigungen registriert.",
-              "success"
-            );
-
-          } catch (error) {
-            console.error(
-              "Push-Registrierung:",
-              error
-            );
-
-            setPushStatus(
-              `Registrierung fehlgeschlagen: ${error.message}`,
-              "error"
-            );
-          }
-        }
+    const info =
+      document.createElement(
+        "div"
       );
 
 
-    // =========================================
-    // VAPID KEY UMWANDELN
-    // =========================================
+    const name =
+      document.createElement(
+        "div"
+      );
 
-    function urlBase64ToUint8Array(
-      base64String
+    name.className =
+      "device-name";
+
+    name.textContent =
+      device.name;
+
+
+    if (
+      device.id === currentId
     ) {
-      const padding =
-        "=".repeat(
-          (
-            4 -
-            base64String.length %
-            4
-          ) %
-          4
+      const badge =
+        document.createElement(
+          "span"
         );
 
-      const base64 =
-        (
-          base64String +
-          padding
-        )
-          .replace(
-            /-/g,
-            "+"
-          )
-          .replace(
-            /_/g,
-            "/"
-          );
+      badge.className =
+        "current-device";
 
-      const rawData =
-        atob(base64);
+      badge.textContent =
+        "dieses Gerät";
 
-      return Uint8Array.from(
-        [...rawData].map(
-          character =>
-            character
-              .charCodeAt(0)
-        )
+      name.appendChild(badge);
+    }
+
+
+    const date =
+      document.createElement(
+        "div"
+      );
+
+    date.className =
+      "device-date";
+
+    date.textContent =
+      "Registriert: " +
+      formatDate(
+        device.createdAt
+      );
+
+
+    info.append(
+      name,
+      date
+    );
+
+
+    const button =
+      document.createElement(
+        "button"
+      );
+
+    button.className =
+      "delete-button";
+
+    button.textContent =
+      "Entfernen";
+
+    button.onclick =
+      () =>
+        deleteDevice(
+          device.id,
+          device.name
+        );
+
+
+    row.append(
+      info,
+      button
+    );
+
+    container.appendChild(
+      row
+    );
+  });
+}
+
+
+async function deleteDevice(
+  deviceId,
+  deviceName
+) {
+  const token =
+    tokenEl.value.trim();
+
+  if (
+    !confirm(
+      `"${deviceName}" wirklich aus den Push-Benachrichtigungen entfernen?`
+    )
+  ) {
+    return;
+  }
+
+  try {
+    const response =
+      await fetch(
+        `${API_BASE}/api/admin-devices`,
+        {
+          method: "DELETE",
+
+          headers: {
+            "Content-Type":
+              "application/json",
+
+            "X-Admin-Token":
+              token
+          },
+
+          body:
+            JSON.stringify({
+              deviceId
+            })
+        }
+      );
+
+    if (!response.ok) {
+      throw new Error(
+        "Gerät konnte nicht entfernt werden."
       );
     }
 
-  </script>
+    const currentId =
+      localStorage.getItem(
+        "pushDeviceId"
+      );
+
+    if (
+      currentId === deviceId
+    ) {
+      localStorage.removeItem(
+        "pushDeviceId"
+      );
+    }
+
+    await loadDevices();
+
+  } catch (error) {
+    alert(
+      error.message
+    );
+  }
+}
+
+
+document
+  .getElementById(
+    "load-devices"
+  )
+  .addEventListener(
+    "click",
+    loadDevices
+  );
+
+</script>
 
 </body>
 </html>
