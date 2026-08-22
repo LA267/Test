@@ -28,7 +28,7 @@ self.addEventListener("push", event => {
     image: "./door-notification.png",
 
     // für Android-Statusleiste
-    badge: "./icon-96.png",
+    badge: "./badge.png",
 
     // ganz wichtig:
     // immer dieselbe Benachrichtigung ersetzen
