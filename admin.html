@@ -1,0 +1,548 @@
+<!doctype html>
+<html lang="de">
+
+<head>
+  <meta charset="utf-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  >
+
+  <meta
+    name="theme-color"
+    content="#111827"
+  >
+
+  <title>Quiz Administration</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+      background: #f3f4f6;
+      color: #111827;
+    }
+
+    .container {
+      width:
+        min(
+          720px,
+          calc(100% - 28px)
+        );
+
+      margin: 32px auto;
+    }
+
+    .card {
+      background: white;
+
+      border-radius: 18px;
+
+      padding: 24px;
+
+      margin-bottom: 18px;
+
+      box-shadow:
+        0 8px 30px
+        rgba(0, 0, 0, .08);
+    }
+
+    h1 {
+      margin-top: 0;
+    }
+
+    input,
+    select {
+      width: 100%;
+
+      padding: 14px;
+
+      margin-bottom: 12px;
+
+      border:
+        1px solid #d1d5db;
+
+      border-radius: 10px;
+
+      font-size: 1rem;
+
+      background: white;
+    }
+
+    button {
+      border: 0;
+
+      border-radius: 10px;
+
+      padding: 12px 16px;
+
+      font-size: 1rem;
+
+      cursor: pointer;
+    }
+
+    .primary {
+      width: 100%;
+
+      background: #111827;
+      color: white;
+    }
+
+    .delete-button {
+      background: #fee2e2;
+      color: #991b1b;
+
+      font-size: .9rem;
+    }
+
+    .row {
+      display: grid;
+
+      grid-template-columns:
+        44px
+        minmax(0, 1fr)
+        90px
+        auto;
+
+      gap: 12px;
+
+      align-items: center;
+
+      padding: 12px 4px;
+
+      border-bottom:
+        1px solid #e5e7eb;
+    }
+
+    .rank {
+      color: #6b7280;
+      font-weight: 700;
+      text-align: right;
+    }
+
+    .name {
+      font-weight: 600;
+
+      overflow: hidden;
+
+      text-overflow: ellipsis;
+
+      white-space: nowrap;
+    }
+
+    .time {
+      font-weight: 700;
+
+      text-align: right;
+
+      font-variant-numeric:
+        tabular-nums;
+    }
+
+    #status {
+      min-height: 1.4em;
+      color: #4b5563;
+    }
+
+    @media (max-width: 560px) {
+      .row {
+        grid-template-columns:
+          34px
+          minmax(0, 1fr)
+          76px;
+      }
+
+      .delete-button {
+        grid-column: 2 / 4;
+
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="container">
+
+    <section class="card">
+
+      <h1>
+        Bestenliste verwalten
+      </h1>
+
+      <p>
+        Admin-Code eingeben und
+        das gewünschte Quiz auswählen.
+      </p>
+
+      <input
+        id="admin-token"
+        type="password"
+        placeholder="ADMIN_TOKEN"
+        autocomplete="off"
+      >
+
+      <select id="quiz-select">
+        <option value="1">
+          Quiz 1 – Knoten
+        </option>
+
+        <option value="2">
+          Quiz 2 – Allgemeinwissen
+        </option>
+      </select>
+
+      <button
+        id="load"
+        class="primary"
+      >
+        Bestenliste laden
+      </button>
+
+      <p id="status"></p>
+
+    </section>
+
+
+    <section
+      class="card"
+      id="leaderboard-card"
+      hidden
+    >
+
+      <h2>
+        Einträge
+      </h2>
+
+      <div id="leaderboard"></div>
+
+    </section>
+
+  </main>
+
+
+  <script>
+    const API_BASE =
+      "https://mein-quiz.vercel.app";
+
+    const tokenEl =
+      document.getElementById(
+        "admin-token"
+      );
+
+    const quizEl =
+      document.getElementById(
+        "quiz-select"
+      );
+
+    const statusEl =
+      document.getElementById(
+        "status"
+      );
+
+    const leaderboardEl =
+      document.getElementById(
+        "leaderboard"
+      );
+
+    const cardEl =
+      document.getElementById(
+        "leaderboard-card"
+      );
+
+
+    function formatTime(
+      milliseconds
+    ) {
+      const totalTenths =
+        Math.floor(
+          milliseconds / 100
+        );
+
+      const minutes =
+        Math.floor(
+          totalTenths / 600
+        );
+
+      const seconds =
+        Math.floor(
+          (totalTenths % 600) / 10
+        );
+
+      const tenths =
+        totalTenths % 10;
+
+      return (
+        String(minutes)
+          .padStart(2, "0") +
+        ":" +
+        String(seconds)
+          .padStart(2, "0") +
+        "." +
+        tenths
+      );
+    }
+
+
+    async function loadLeaderboard() {
+      const token =
+        tokenEl.value.trim();
+
+      const quiz =
+        quizEl.value;
+
+      if (!token) {
+        statusEl.textContent =
+          "Bitte Admin-Code eingeben.";
+
+        return;
+      }
+
+      statusEl.textContent =
+        "Bestenliste wird geladen …";
+
+      try {
+        const response =
+          await fetch(
+            `${API_BASE}/api/admin-leaderboard?quiz=${quiz}`,
+            {
+              headers: {
+                "X-Admin-Token":
+                  token
+              },
+
+              cache: "no-store"
+            }
+          );
+
+        if (
+          response.status === 401
+        ) {
+          throw new Error(
+            "Admin-Code ist falsch."
+          );
+        }
+
+        if (!response.ok) {
+          throw new Error(
+            `API-Fehler ${response.status}`
+          );
+        }
+
+        const data =
+          await response.json();
+
+        renderLeaderboard(
+          data.leaderboard || []
+        );
+
+        statusEl.textContent =
+          "";
+
+      } catch (error) {
+        console.error(error);
+
+        cardEl.hidden = true;
+
+        statusEl.textContent =
+          error.message;
+      }
+    }
+
+
+    function renderLeaderboard(
+      entries
+    ) {
+      leaderboardEl.innerHTML =
+        "";
+
+      cardEl.hidden = false;
+
+      if (
+        entries.length === 0
+      ) {
+        leaderboardEl.textContent =
+          "Keine Einträge vorhanden.";
+
+        return;
+      }
+
+      entries.forEach(
+        (entry, index) => {
+
+          const row =
+            document.createElement(
+              "div"
+            );
+
+          row.className =
+            "row";
+
+
+          const rank =
+            document.createElement(
+              "div"
+            );
+
+          rank.className =
+            "rank";
+
+          rank.textContent =
+            `${index + 1}.`;
+
+
+          const name =
+            document.createElement(
+              "div"
+            );
+
+          name.className =
+            "name";
+
+          name.textContent =
+            entry.nickname;
+
+
+          const time =
+            document.createElement(
+              "div"
+            );
+
+          time.className =
+            "time";
+
+          time.textContent =
+            formatTime(
+              Number(entry.time)
+            );
+
+
+          const deleteButton =
+            document.createElement(
+              "button"
+            );
+
+          deleteButton.className =
+            "delete-button";
+
+          deleteButton.textContent =
+            "Entfernen";
+
+          deleteButton.addEventListener(
+            "click",
+            () => {
+              deletePlayer(
+                entry.nickname
+              );
+            }
+          );
+
+
+          row.appendChild(rank);
+          row.appendChild(name);
+          row.appendChild(time);
+          row.appendChild(
+            deleteButton
+          );
+
+          leaderboardEl.appendChild(
+            row
+          );
+        }
+      );
+    }
+
+
+    async function deletePlayer(
+      nickname
+    ) {
+      const token =
+        tokenEl.value.trim();
+
+      const quiz =
+        quizEl.value;
+
+      const confirmed =
+        confirm(
+          `"${nickname}" wirklich aus der Bestenliste entfernen?`
+        );
+
+      if (!confirmed) {
+        return;
+      }
+
+      statusEl.textContent =
+        `${nickname} wird entfernt …`;
+
+      try {
+        const response =
+          await fetch(
+            `${API_BASE}/api/admin-leaderboard?quiz=${quiz}`,
+            {
+              method: "DELETE",
+
+              headers: {
+                "Content-Type":
+                  "application/json",
+
+                "X-Admin-Token":
+                  token
+              },
+
+              body:
+                JSON.stringify({
+                  nickname
+                })
+            }
+          );
+
+        if (
+          response.status === 401
+        ) {
+          throw new Error(
+            "Admin-Code ist falsch."
+          );
+        }
+
+        if (!response.ok) {
+          throw new Error(
+            `Löschen fehlgeschlagen (${response.status})`
+          );
+        }
+
+        statusEl.textContent =
+          `${nickname} wurde entfernt.`;
+
+        await loadLeaderboard();
+
+      } catch (error) {
+        console.error(error);
+
+        statusEl.textContent =
+          error.message;
+      }
+    }
+
+
+    document
+      .getElementById("load")
+      .addEventListener(
+        "click",
+        loadLeaderboard
+      );
+  </script>
+
+</body>
+</html>
