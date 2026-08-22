@@ -706,7 +706,72 @@ document
     }
   );
 
+// ======================================================
+// BESUCHERSTATISTIK
+// ======================================================
 
+function getVisitorId() {
+  let visitorId =
+    localStorage.getItem(
+      "quizVisitorId"
+    );
+
+  if (!visitorId) {
+    if (
+      crypto &&
+      typeof crypto.randomUUID ===
+        "function"
+    ) {
+      visitorId =
+        crypto.randomUUID();
+    } else {
+      visitorId =
+        Date.now().toString(36) +
+        "-" +
+        Math.random()
+          .toString(36)
+          .slice(2);
+    }
+
+    localStorage.setItem(
+      "quizVisitorId",
+      visitorId
+    );
+  }
+
+  return visitorId;
+}
+
+async function trackVisit() {
+  try {
+    await fetch(
+      `${API_BASE}/api/visit`,
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type":
+            "application/json"
+        },
+
+        body:
+          JSON.stringify({
+            quiz: "1",
+            visitorId:
+              getVisitorId()
+          })
+      }
+    );
+
+  } catch (error) {
+    console.error(
+      "Besucherstatistik:",
+      error
+    );
+  }
+}
+
+trackVisit();
 
 // ======================================================
 // START
