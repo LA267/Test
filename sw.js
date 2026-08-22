@@ -1,3 +1,5 @@
+const SW_VERSION = "v2";
+
 self.addEventListener("push", event => {
   let data = {
     title: "Neues Lösungswort",
@@ -28,7 +30,7 @@ self.addEventListener("push", event => {
     image: "./door-notification.png",
 
     // für Android-Statusleiste
-    badge: "./badge.png",
+    badge: "./badge.png?v=2",
 
     // ganz wichtig:
     // immer dieselbe Benachrichtigung ersetzen
