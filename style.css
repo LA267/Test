@@ -314,3 +314,17 @@ button {
   border-color: #9ca3af;
   box-shadow: 0 0 0 3px rgba(17, 24, 39, .08);
 }
+
+
+
+
+
+
+
+
+.edit-button {
+  background: #e5e7eb;
+  color: #111827;
+  font-size: .9rem;
+  white-space: nowrap;
+}
