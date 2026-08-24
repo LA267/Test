@@ -2,6 +2,7 @@
 <html lang="de">
 
 <head>
+
   <meta charset="utf-8">
 
   <meta
@@ -22,10 +23,13 @@
     href="door-notification.png"
   >
 
+
   <style>
+
     * {
       box-sizing: border-box;
     }
+
 
     body {
       margin: 0;
@@ -41,7 +45,9 @@
       color: #111827;
     }
 
+
     .container {
+
       width: min(
         720px,
         calc(100% - 28px)
@@ -50,10 +56,15 @@
       margin: 32px auto;
     }
 
+
     .card {
+
       background: white;
+
       border-radius: 18px;
+
       padding: 24px;
+
       margin-bottom: 18px;
 
       box-shadow:
@@ -61,22 +72,25 @@
         rgba(0, 0, 0, .08);
     }
 
+
     h1 {
       margin: 0 0 22px;
     }
+
 
     h2 {
       margin-top: 0;
     }
 
+
     h3 {
-      margin:
-        0 0
-        14px;
+      margin: 0 0 14px;
     }
+
 
     input,
     select {
+
       width: 100%;
 
       padding: 14px 16px;
@@ -93,11 +107,14 @@
       font-size: 1rem;
 
       background: white;
+
       color: #111827;
     }
 
+
     input:focus,
     select:focus {
+
       outline: none;
 
       border-color: #9ca3af;
@@ -107,8 +124,11 @@
         rgba(17, 24, 39, .08);
     }
 
+
     button {
+
       border: 0;
+
       border-radius: 11px;
 
       padding: 13px 17px;
@@ -118,45 +138,82 @@
       cursor: pointer;
     }
 
+
     .primary {
+
       width: 100%;
+
       background: #111827;
+
       color: white;
+
       margin-top: 8px;
     }
 
+
     .secondary {
+
       width: 100%;
+
       background: #e5e7eb;
+
       color: #111827;
+
       margin-top: 10px;
     }
 
-    .delete-button {
-      background: #fee2e2;
-      color: #991b1b;
+
+    /* NEU: UMBENENNEN */
+
+    .edit-button {
+
+      background: #e5e7eb;
+
+      color: #111827;
 
       font-size: .9rem;
+
       white-space: nowrap;
     }
 
+
+    .delete-button {
+
+      background: #fee2e2;
+
+      color: #991b1b;
+
+      font-size: .9rem;
+
+      white-space: nowrap;
+    }
+
+
     .status {
+
       min-height: 1.4em;
+
       color: #4b5563;
     }
+
 
     .success {
       color: #166534;
     }
 
+
     .error {
       color: #b91c1c;
     }
 
+
     .leaderboard-row,
     .device-row {
+
       display: grid;
+
       gap: 12px;
+
       align-items: center;
 
       padding: 12px 4px;
@@ -165,46 +222,68 @@
         1px solid #e5e7eb;
     }
 
+
+    /* NEU: Platz für 2 Buttons */
+
     .leaderboard-row {
+
       grid-template-columns:
         44px
         minmax(0, 1fr)
         90px
+        auto
         auto;
     }
 
+
     .device-row {
+
       grid-template-columns:
         minmax(0, 1fr)
         auto;
     }
 
+
     .leaderboard-rank {
+
       color: #6b7280;
+
       font-weight: 800;
+
       text-align: right;
     }
 
+
     .leaderboard-name,
     .device-name {
+
       font-weight: 700;
     }
 
+
     .leaderboard-time {
+
       font-weight: 800;
+
       text-align: right;
 
       font-variant-numeric:
         tabular-nums;
     }
 
+
     .device-date {
+
       color: #6b7280;
+
       font-size: .9rem;
+
       margin-top: 3px;
     }
 
+
     .current-device {
+
       display: inline-block;
 
       margin-left: 8px;
@@ -216,10 +295,13 @@
       background: #e5e7eb;
 
       font-size: .75rem;
+
       font-weight: 600;
     }
 
+
     .stats-grid {
+
       display: grid;
 
       grid-template-columns:
@@ -230,7 +312,9 @@
       margin-top: 18px;
     }
 
+
     .stats-quiz {
+
       border:
         1px solid #e5e7eb;
 
@@ -239,7 +323,9 @@
       padding: 18px;
     }
 
+
     .stat-row {
+
       display: flex;
 
       justify-content:
@@ -253,66 +339,104 @@
         1px solid #f3f4f6;
     }
 
+
     .stat-row:last-child {
       border-bottom: 0;
     }
+
 
     .stat-label {
       color: #6b7280;
     }
 
+
     .stat-value {
+
       font-weight: 800;
 
       font-variant-numeric:
         tabular-nums;
     }
 
+
     [hidden] {
       display: none !important;
     }
 
+
     @media (
       max-width: 560px
     ) {
+
       .card {
         padding: 20px;
       }
 
+
       .stats-grid {
+
         grid-template-columns:
           1fr;
       }
 
+
       .leaderboard-row {
+
         grid-template-columns:
           34px
           minmax(0, 1fr)
           78px;
       }
 
+
       .leaderboard-row
-      .delete-button {
-        grid-column: 2 / 4;
+      .edit-button {
+
+        grid-column:
+          2 / 3;
+
         width: 100%;
       }
 
+
+      .leaderboard-row
+      .delete-button {
+
+        grid-column:
+          3 / 4;
+
+        width: 100%;
+      }
+
+
       .device-row {
+
         grid-template-columns:
           1fr;
       }
 
+
       .device-row
       .delete-button {
+
         width: 100%;
       }
     }
+
   </style>
+
 </head>
+
 
 <body>
 
+
 <main class="container">
+
+
+  <!-- =========================================
+       ADMIN
+  ========================================== -->
 
   <section class="card">
 
@@ -334,7 +458,10 @@
   </section>
 
 
-  <!-- STATISTIK -->
+
+  <!-- =========================================
+       STATISTIK
+  ========================================== -->
 
   <section class="card">
 
@@ -359,11 +486,15 @@
       class="status"
     ></p>
 
+
     <div
       id="stats-content"
       class="stats-grid"
       hidden
     >
+
+
+      <!-- QUIZ 1 -->
 
       <div class="stats-quiz">
 
@@ -371,7 +502,9 @@
           Quiz 1 – Knoten
         </h3>
 
+
         <div class="stat-row">
+
           <span class="stat-label">
             Besucher heute
           </span>
@@ -382,9 +515,12 @@
           >
             0
           </span>
+
         </div>
 
+
         <div class="stat-row">
+
           <span class="stat-label">
             Aufrufe heute
           </span>
@@ -395,9 +531,12 @@
           >
             0
           </span>
+
         </div>
 
+
         <div class="stat-row">
+
           <span class="stat-label">
             Besucher insgesamt
           </span>
@@ -408,9 +547,12 @@
           >
             0
           </span>
+
         </div>
 
+
         <div class="stat-row">
+
           <span class="stat-label">
             Aufrufe insgesamt
           </span>
@@ -421,10 +563,14 @@
           >
             0
           </span>
+
         </div>
 
       </div>
 
+
+
+      <!-- QUIZ 2 -->
 
       <div class="stats-quiz">
 
@@ -432,7 +578,9 @@
           Quiz 2 – Allgemeinwissen
         </h3>
 
+
         <div class="stat-row">
+
           <span class="stat-label">
             Besucher heute
           </span>
@@ -443,9 +591,12 @@
           >
             0
           </span>
+
         </div>
 
+
         <div class="stat-row">
+
           <span class="stat-label">
             Aufrufe heute
           </span>
@@ -456,9 +607,12 @@
           >
             0
           </span>
+
         </div>
 
+
         <div class="stat-row">
+
           <span class="stat-label">
             Besucher insgesamt
           </span>
@@ -469,9 +623,12 @@
           >
             0
           </span>
+
         </div>
 
+
         <div class="stat-row">
+
           <span class="stat-label">
             Aufrufe insgesamt
           </span>
@@ -482,16 +639,21 @@
           >
             0
           </span>
+
         </div>
 
       </div>
+
 
     </div>
 
   </section>
 
 
-  <!-- BESTENLISTE -->
+
+  <!-- =========================================
+       BESTENLISTE
+  ========================================== -->
 
   <section class="card">
 
@@ -511,6 +673,7 @@
 
     </select>
 
+
     <button
       id="load-leaderboard"
       class="primary"
@@ -518,12 +681,14 @@
       Bestenliste laden
     </button>
 
+
     <p
       id="leaderboard-status"
       class="status"
     ></p>
 
   </section>
+
 
 
   <section
@@ -541,7 +706,10 @@
   </section>
 
 
-  <!-- PUSH -->
+
+  <!-- =========================================
+       PUSH
+  ========================================== -->
 
   <section class="card">
 
@@ -562,6 +730,7 @@
       autocomplete="off"
     >
 
+
     <button
       id="enable-push"
       class="secondary"
@@ -569,12 +738,14 @@
       Benachrichtigungen erlauben
     </button>
 
+
     <button
       id="register-device"
       class="primary"
     >
       Dieses Gerät registrieren
     </button>
+
 
     <p
       id="push-status"
@@ -584,13 +755,17 @@
   </section>
 
 
-  <!-- GERÄTE -->
+
+  <!-- =========================================
+       GERÄTE
+  ========================================== -->
 
   <section class="card">
 
     <h2>
       Registrierte Geräte
     </h2>
+
 
     <button
       id="load-devices"
@@ -599,22 +774,28 @@
       Geräteliste aktualisieren
     </button>
 
+
     <p
       id="devices-status"
       class="status"
     ></p>
 
+
     <div id="devices"></div>
 
   </section>
 
+
 </main>
+
 
 
 <script>
 
+
 const API_BASE =
   "https://mein-quiz.vercel.app";
+
 
 const tokenEl =
   document.getElementById(
@@ -622,26 +803,33 @@ const tokenEl =
   );
 
 
+
 // =========================================
 // HILFSFUNKTIONEN
 // =========================================
 
 function formatTime(ms) {
+
   const totalTenths =
     Math.floor(ms / 100);
+
 
   const minutes =
     Math.floor(
       totalTenths / 600
     );
 
+
   const seconds =
     Math.floor(
-      (totalTenths % 600) / 10
+      (totalTenths % 600) /
+      10
     );
+
 
   const tenths =
     totalTenths % 10;
+
 
   return (
     String(minutes)
@@ -655,10 +843,14 @@ function formatTime(ms) {
 }
 
 
+
 function formatDate(timestamp) {
+
   if (!timestamp) {
+
     return "Datum unbekannt";
   }
+
 
   return new Date(
     timestamp
@@ -668,9 +860,11 @@ function formatDate(timestamp) {
 }
 
 
+
 function urlBase64ToUint8Array(
   base64String
 ) {
+
   const padding =
     "=".repeat(
       (
@@ -681,6 +875,7 @@ function urlBase64ToUint8Array(
       4
     );
 
+
   const base64 =
     (
       base64String +
@@ -689,8 +884,10 @@ function urlBase64ToUint8Array(
       .replace(/-/g, "+")
       .replace(/_/g, "/");
 
+
   const raw =
     atob(base64);
+
 
   return Uint8Array.from(
     [...raw].map(
@@ -701,40 +898,51 @@ function urlBase64ToUint8Array(
 }
 
 
+
 // =========================================
 // STATISTIK
 // =========================================
 
 async function loadStats() {
+
   const token =
     tokenEl.value.trim();
+
 
   const status =
     document.getElementById(
       "stats-status"
     );
 
+
   const content =
     document.getElementById(
       "stats-content"
     );
 
+
   if (!token) {
+
     status.textContent =
       "Bitte Admin-Code eingeben.";
 
     return;
   }
 
+
   status.textContent =
     "Statistik wird geladen …";
 
+
   try {
+
     const response =
       await fetch(
         `${API_BASE}/api/admin-stats`,
         {
+
           headers: {
+
             "X-Admin-Token":
               token
           },
@@ -743,7 +951,9 @@ async function loadStats() {
         }
       );
 
+
     if (!response.ok) {
+
       throw new Error(
         response.status === 401
           ? "Admin-Code ist falsch."
@@ -751,8 +961,10 @@ async function loadStats() {
       );
     }
 
+
     const data =
       await response.json();
+
 
     document
       .getElementById(
@@ -761,6 +973,7 @@ async function loadStats() {
       .textContent =
         data.quiz1.visitorsToday;
 
+
     document
       .getElementById(
         "q1-views-today"
@@ -768,12 +981,14 @@ async function loadStats() {
       .textContent =
         data.quiz1.viewsToday;
 
+
     document
       .getElementById(
         "q1-visitors-total"
       )
       .textContent =
         data.quiz1.visitorsTotal;
+
 
     document
       .getElementById(
@@ -783,12 +998,14 @@ async function loadStats() {
         data.quiz1.viewsTotal;
 
 
+
     document
       .getElementById(
         "q2-visitors-today"
       )
       .textContent =
         data.quiz2.visitorsToday;
+
 
     document
       .getElementById(
@@ -797,12 +1014,14 @@ async function loadStats() {
       .textContent =
         data.quiz2.viewsToday;
 
+
     document
       .getElementById(
         "q2-visitors-total"
       )
       .textContent =
         data.quiz2.visitorsTotal;
+
 
     document
       .getElementById(
@@ -811,20 +1030,29 @@ async function loadStats() {
       .textContent =
         data.quiz2.viewsTotal;
 
-    content.hidden = false;
+
+    content.hidden =
+      false;
+
 
     status.textContent =
       "Statistik geladen.";
 
+
   } catch (error) {
+
     console.error(error);
 
-    content.hidden = true;
+
+    content.hidden =
+      true;
+
 
     status.textContent =
       error.message;
   }
 }
+
 
 
 document
@@ -837,13 +1065,16 @@ document
   );
 
 
+
 // =========================================
-// BESTENLISTE
+// BESTENLISTE LADEN
 // =========================================
 
 async function loadLeaderboard() {
+
   const token =
     tokenEl.value.trim();
+
 
   const quiz =
     document
@@ -852,27 +1083,35 @@ async function loadLeaderboard() {
       )
       .value;
 
+
   const status =
     document.getElementById(
       "leaderboard-status"
     );
 
+
   if (!token) {
+
     status.textContent =
       "Bitte Admin-Code eingeben.";
 
     return;
   }
 
+
   status.textContent =
     "Wird geladen …";
 
+
   try {
+
     const response =
       await fetch(
         `${API_BASE}/api/admin-leaderboard?quiz=${quiz}`,
         {
+
           headers: {
+
             "X-Admin-Token":
               token
           },
@@ -881,7 +1120,9 @@ async function loadLeaderboard() {
         }
       );
 
+
     if (!response.ok) {
+
       throw new Error(
         response.status === 401
           ? "Admin-Code ist falsch."
@@ -889,114 +1130,182 @@ async function loadLeaderboard() {
       );
     }
 
+
     const data =
       await response.json();
+
 
     renderLeaderboard(
       data.leaderboard || []
     );
 
+
     status.textContent =
       "Bestenliste geladen.";
 
+
   } catch (error) {
+
     status.textContent =
       error.message;
   }
 }
 
 
+
+// =========================================
+// BESTENLISTE ANZEIGEN
+// =========================================
+
 function renderLeaderboard(entries) {
+
   const card =
     document.getElementById(
       "leaderboard-card"
     );
+
 
   const container =
     document.getElementById(
       "leaderboard"
     );
 
-  container.innerHTML = "";
 
-  card.hidden = false;
+  container.innerHTML =
+    "";
+
+
+  card.hidden =
+    false;
+
 
   if (!entries.length) {
+
     container.textContent =
       "Keine Einträge vorhanden.";
 
     return;
   }
 
+
   entries.forEach(
     (entry, index) => {
+
 
       const row =
         document.createElement(
           "div"
         );
 
+
       row.className =
         "leaderboard-row";
+
+
 
       const rank =
         document.createElement(
           "div"
         );
 
+
       rank.className =
         "leaderboard-rank";
 
+
       rank.textContent =
         `${index + 1}.`;
+
+
 
       const name =
         document.createElement(
           "div"
         );
 
+
       name.className =
         "leaderboard-name";
 
+
       name.textContent =
         entry.nickname;
+
+
 
       const time =
         document.createElement(
           "div"
         );
 
+
       time.className =
         "leaderboard-time";
+
 
       time.textContent =
         formatTime(
           Number(entry.time)
         );
 
-      const button =
+
+
+      // UMBENENNEN
+
+      const editButton =
         document.createElement(
           "button"
         );
 
-      button.className =
+
+      editButton.className =
+        "edit-button";
+
+
+      editButton.textContent =
+        "Umbenennen";
+
+
+      editButton.onclick =
+        () =>
+          renamePlayer(
+            entry.nickname
+          );
+
+
+
+      // ENTFERNEN
+
+      const deleteButton =
+        document.createElement(
+          "button"
+        );
+
+
+      deleteButton.className =
         "delete-button";
 
-      button.textContent =
+
+      deleteButton.textContent =
         "Entfernen";
 
-      button.onclick =
+
+      deleteButton.onclick =
         () =>
           deletePlayer(
             entry.nickname
           );
 
+
+
       row.append(
         rank,
         name,
         time,
-        button
+        editButton,
+        deleteButton
       );
+
 
       container.appendChild(
         row
@@ -1006,11 +1315,18 @@ function renderLeaderboard(entries) {
 }
 
 
-async function deletePlayer(
-  nickname
+
+// =========================================
+// SPIELER UMBENENNEN
+// =========================================
+
+async function renamePlayer(
+  oldNickname
 ) {
+
   const token =
     tokenEl.value.trim();
+
 
   const quiz =
     document
@@ -1019,45 +1335,201 @@ async function deletePlayer(
       )
       .value;
 
+
+  if (!token) {
+
+    alert(
+      "Bitte zuerst den Admin-Code eingeben."
+    );
+
+    return;
+  }
+
+
+  const newNickname =
+    prompt(
+      "Neuer Ranglistenname:",
+      oldNickname
+    );
+
+
+  // Abbrechen
+
+  if (newNickname === null) {
+
+    return;
+  }
+
+
+  const cleanedName =
+    newNickname
+      .trim()
+      .slice(
+        0,
+        20
+      );
+
+
+  if (!cleanedName) {
+
+    alert(
+      "Der Name darf nicht leer sein."
+    );
+
+    return;
+  }
+
+
+  if (
+    cleanedName ===
+    oldNickname
+  ) {
+
+    return;
+  }
+
+
+  try {
+
+    const response =
+      await fetch(
+        `${API_BASE}/api/admin-leaderboard?quiz=${quiz}`,
+        {
+
+          method: "PATCH",
+
+
+          headers: {
+
+            "Content-Type":
+              "application/json",
+
+            "X-Admin-Token":
+              token
+          },
+
+
+          body:
+            JSON.stringify({
+
+              oldNickname,
+
+              newNickname:
+                cleanedName
+            })
+        }
+      );
+
+
+    const data =
+      await response.json();
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        data.error ||
+        "Name konnte nicht geändert werden."
+      );
+    }
+
+
+    await loadLeaderboard();
+
+
+  } catch (error) {
+
+    console.error(error);
+
+
+    alert(
+      error.message
+    );
+  }
+}
+
+
+
+// =========================================
+// SPIELER LÖSCHEN
+// =========================================
+
+async function deletePlayer(
+  nickname
+) {
+
+  const token =
+    tokenEl.value.trim();
+
+
+  const quiz =
+    document
+      .getElementById(
+        "quiz-select"
+      )
+      .value;
+
+
   if (
     !confirm(
       `"${nickname}" wirklich entfernen?`
     )
   ) {
+
     return;
   }
 
-  const response =
-    await fetch(
-      `${API_BASE}/api/admin-leaderboard?quiz=${quiz}`,
-      {
-        method: "DELETE",
 
-        headers: {
-          "Content-Type":
-            "application/json",
+  try {
 
-          "X-Admin-Token":
-            token
-        },
+    const response =
+      await fetch(
+        `${API_BASE}/api/admin-leaderboard?quiz=${quiz}`,
+        {
 
-        body:
-          JSON.stringify({
-            nickname
-          })
-      }
-    );
+          method: "DELETE",
 
-  if (!response.ok) {
+
+          headers: {
+
+            "Content-Type":
+              "application/json",
+
+            "X-Admin-Token":
+              token
+          },
+
+
+          body:
+            JSON.stringify({
+              nickname
+            })
+        }
+      );
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        "Löschen fehlgeschlagen."
+      );
+    }
+
+
+    await loadLeaderboard();
+
+
+  } catch (error) {
+
+    console.error(error);
+
+
     alert(
-      "Löschen fehlgeschlagen."
+      error.message
     );
-
-    return;
   }
-
-  await loadLeaderboard();
 }
+
 
 
 document
@@ -1070,30 +1542,38 @@ document
   );
 
 
+
 // =========================================
 // SERVICE WORKER
 // =========================================
 
 async function getRegistration() {
+
   if (
     !(
       "serviceWorker"
       in navigator
     )
   ) {
+
     throw new Error(
       "Service Worker nicht unterstützt."
     );
   }
 
+
   await navigator
     .serviceWorker
-    .register("./sw.js");
+    .register(
+      "./sw.js"
+    );
+
 
   return await navigator
     .serviceWorker
     .ready;
 }
+
 
 
 // =========================================
@@ -1108,36 +1588,46 @@ document
     "click",
     async () => {
 
+
       const status =
         document.getElementById(
           "push-status"
         );
 
+
       try {
+
         const permission =
           await Notification
             .requestPermission();
+
 
         if (
           permission !==
           "granted"
         ) {
+
           throw new Error(
             "Benachrichtigungen wurden nicht erlaubt."
           );
         }
 
+
         await getRegistration();
+
 
         status.textContent =
           "Benachrichtigungen sind erlaubt.";
 
+
       } catch (error) {
+
         status.textContent =
           error.message;
       }
     }
   );
+
 
 
 // =========================================
@@ -1152,13 +1642,16 @@ document
     "click",
     async () => {
 
+
       const status =
         document.getElementById(
           "push-status"
         );
 
+
       const token =
         tokenEl.value.trim();
+
 
       const deviceName =
         document
@@ -1168,68 +1661,90 @@ document
           .value
           .trim();
 
+
       if (!token) {
+
         status.textContent =
           "Bitte Admin-Code eingeben.";
 
         return;
       }
 
+
       if (!deviceName) {
+
         status.textContent =
           "Bitte einen Gerätenamen eingeben.";
 
         return;
       }
 
+
       try {
+
         if (
           Notification.permission !==
           "granted"
         ) {
+
           throw new Error(
             "Bitte zuerst Benachrichtigungen erlauben."
           );
         }
 
+
         status.textContent =
           "Gerät wird registriert …";
 
+
         const registration =
           await getRegistration();
+
 
         const keyResponse =
           await fetch(
             `${API_BASE}/api/public-key`,
             {
-              cache: "no-store"
+              cache:
+                "no-store"
             }
           );
 
+
         if (!keyResponse.ok) {
+
           throw new Error(
             "Public Key konnte nicht geladen werden."
           );
         }
 
+
         const keyData =
           await keyResponse.json();
+
+
 
         let oldSubscription =
           await registration
             .pushManager
             .getSubscription();
 
+
         if (oldSubscription) {
+
           await oldSubscription
             .unsubscribe();
         }
+
+
 
         const subscription =
           await registration
             .pushManager
             .subscribe({
-              userVisibleOnly: true,
+
+              userVisibleOnly:
+                true,
 
               applicationServerKey:
                 urlBase64ToUint8Array(
@@ -1237,18 +1752,25 @@ document
                 )
             });
 
+
+
         const replaceDeviceId =
           localStorage.getItem(
             "pushDeviceId"
           ) || "";
 
+
+
         const response =
           await fetch(
             `${API_BASE}/api/subscribe`,
             {
+
               method: "POST",
 
+
               headers: {
+
                 "Content-Type":
                   "application/json",
 
@@ -1256,36 +1778,49 @@ document
                   token
               },
 
+
               body:
                 JSON.stringify({
+
                   deviceName,
+
                   subscription,
+
                   replaceDeviceId
                 })
             }
           );
 
+
         if (!response.ok) {
+
           throw new Error(
             `Registrierung fehlgeschlagen (${response.status})`
           );
         }
 
+
         const data =
           await response.json();
+
 
         localStorage.setItem(
           "pushDeviceId",
           data.device.id
         );
 
+
         status.textContent =
           "Gerät erfolgreich registriert.";
 
+
         await loadDevices();
 
+
       } catch (error) {
+
         console.error(error);
+
 
         status.textContent =
           error.message;
@@ -1294,49 +1829,57 @@ document
   );
 
 
+
 // =========================================
 // GERÄTELISTE
 // =========================================
 
 async function loadDevices() {
+
   const token =
     tokenEl.value.trim();
+
 
   const status =
     document.getElementById(
       "devices-status"
     );
 
-  const container =
-    document.getElementById(
-      "devices"
-    );
 
   if (!token) {
+
     status.textContent =
       "Bitte Admin-Code eingeben.";
 
     return;
   }
 
+
   status.textContent =
     "Geräte werden geladen …";
 
+
   try {
+
     const response =
       await fetch(
         `${API_BASE}/api/admin-devices`,
         {
+
           headers: {
+
             "X-Admin-Token":
               token
           },
 
-          cache: "no-store"
+          cache:
+            "no-store"
         }
       );
 
+
     if (!response.ok) {
+
       throw new Error(
         response.status === 401
           ? "Admin-Code ist falsch."
@@ -1344,167 +1887,228 @@ async function loadDevices() {
       );
     }
 
+
     const data =
       await response.json();
+
 
     renderDevices(
       data.devices || []
     );
 
+
     status.textContent =
       `${data.devices.length} Gerät(e) registriert.`;
 
+
   } catch (error) {
+
     status.textContent =
       error.message;
   }
 }
 
 
+
+// =========================================
+// GERÄTE ANZEIGEN
+// =========================================
+
 function renderDevices(devices) {
+
   const container =
     document.getElementById(
       "devices"
     );
 
-  container.innerHTML = "";
+
+  container.innerHTML =
+    "";
+
 
   if (!devices.length) {
+
     container.textContent =
       "Keine Geräte registriert.";
 
     return;
   }
 
+
   const currentId =
     localStorage.getItem(
       "pushDeviceId"
     );
 
-  devices.forEach(device => {
 
-    const row =
-      document.createElement(
-        "div"
-      );
+  devices.forEach(
+    device => {
 
-    row.className =
-      "device-row";
 
-    const info =
-      document.createElement(
-        "div"
-      );
-
-    const name =
-      document.createElement(
-        "div"
-      );
-
-    name.className =
-      "device-name";
-
-    name.textContent =
-      device.name;
-
-    if (
-      device.id ===
-      currentId
-    ) {
-      const badge =
+      const row =
         document.createElement(
-          "span"
+          "div"
         );
 
-      badge.className =
-        "current-device";
 
-      badge.textContent =
-        "dieses Gerät";
+      row.className =
+        "device-row";
 
-      name.appendChild(
-        badge
+
+
+      const info =
+        document.createElement(
+          "div"
+        );
+
+
+
+      const name =
+        document.createElement(
+          "div"
+        );
+
+
+      name.className =
+        "device-name";
+
+
+      name.textContent =
+        device.name;
+
+
+
+      if (
+        device.id ===
+        currentId
+      ) {
+
+        const badge =
+          document.createElement(
+            "span"
+          );
+
+
+        badge.className =
+          "current-device";
+
+
+        badge.textContent =
+          "dieses Gerät";
+
+
+        name.appendChild(
+          badge
+        );
+      }
+
+
+
+      const date =
+        document.createElement(
+          "div"
+        );
+
+
+      date.className =
+        "device-date";
+
+
+      date.textContent =
+        "Registriert: " +
+        formatDate(
+          device.createdAt
+        );
+
+
+
+      info.append(
+        name,
+        date
+      );
+
+
+
+      const button =
+        document.createElement(
+          "button"
+        );
+
+
+      button.className =
+        "delete-button";
+
+
+      button.textContent =
+        "Entfernen";
+
+
+      button.onclick =
+        () =>
+          deleteDevice(
+            device.id,
+            device.name
+          );
+
+
+
+      row.append(
+        info,
+        button
+      );
+
+
+      container.appendChild(
+        row
       );
     }
-
-    const date =
-      document.createElement(
-        "div"
-      );
-
-    date.className =
-      "device-date";
-
-    date.textContent =
-      "Registriert: " +
-      formatDate(
-        device.createdAt
-      );
-
-    info.append(
-      name,
-      date
-    );
-
-    const button =
-      document.createElement(
-        "button"
-      );
-
-    button.className =
-      "delete-button";
-
-    button.textContent =
-      "Entfernen";
-
-    button.onclick =
-      () =>
-        deleteDevice(
-          device.id,
-          device.name
-        );
-
-    row.append(
-      info,
-      button
-    );
-
-    container.appendChild(
-      row
-    );
-  });
+  );
 }
 
+
+
+// =========================================
+// GERÄT LÖSCHEN
+// =========================================
 
 async function deleteDevice(
   deviceId,
   deviceName
 ) {
+
   const token =
     tokenEl.value.trim();
+
 
   if (
     !confirm(
       `"${deviceName}" wirklich aus den Push-Benachrichtigungen entfernen?`
     )
   ) {
+
     return;
   }
 
+
   try {
+
     const response =
       await fetch(
         `${API_BASE}/api/admin-devices`,
         {
+
           method: "DELETE",
 
+
           headers: {
+
             "Content-Type":
               "application/json",
 
             "X-Admin-Token":
               token
           },
+
 
           body:
             JSON.stringify({
@@ -1513,33 +2117,44 @@ async function deleteDevice(
         }
       );
 
+
     if (!response.ok) {
+
       throw new Error(
         "Gerät konnte nicht entfernt werden."
       );
     }
+
+
 
     const currentId =
       localStorage.getItem(
         "pushDeviceId"
       );
 
+
     if (
-      currentId === deviceId
+      currentId ===
+      deviceId
     ) {
+
       localStorage.removeItem(
         "pushDeviceId"
       );
     }
 
+
     await loadDevices();
 
+
   } catch (error) {
+
     alert(
       error.message
     );
   }
 }
+
 
 
 document
@@ -1551,7 +2166,10 @@ document
     loadDevices
   );
 
+
 </script>
 
+
 </body>
+
 </html>
